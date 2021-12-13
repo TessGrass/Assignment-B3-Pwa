@@ -6,3 +6,4 @@
  */
 
 import './components/desktop-main/'
+import './components/desktop-window/'

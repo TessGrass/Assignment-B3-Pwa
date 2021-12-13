@@ -35,19 +35,16 @@ template.innerHTML = `
   background-color: #92C7A3;
   width: 35px;
   height: 35px;
-
 }
 
 img {
   width: 100%;
   max-height: 100%;
-
 }
-
 </style>
 
 <div class="mainwrapper">
-<img src = "js/components/desktop-main/grey.jpg">
+<img src = "js/components/desktop-main/lib/grey.jpg">
 <div class="navbar">
 <button type="button" class="app left"></button>
 <button type="button" class="app middle"></button>
@@ -60,21 +57,22 @@ img {
 `
 customElements.define('desktop-main',
   /**
-   * 
+   *
    */
   class extends HTMLElement {
   /**
-   * 
+   *
    */
     constructor () {
       super()
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
-        this.button = this.shadowRoot.querySelector('button')
+      this.button = this.shadowRoot.querySelector('button')
 
       this.button.addEventListener('click', (event) => {
         console.log('i knappen')
+        // document.createElement('desktop-window')
       })
     }
   })
