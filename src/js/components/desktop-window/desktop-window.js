@@ -3,19 +3,43 @@ template.innerHTML = `
 <style>
     #divwindow {
         position: absolute;
-        width: 200px;
-        height: 200px;
-        background-color: red;
+        width: 500px;
+        
+        background-color: #C8C8C8;
+        border-radius: 10px;       
     }
+    
+    #divcontent {
+      width: 500px;
+      height: 500px;
+      pointer-events: none;
+      background-color: #C8C8C8;
+      z-index: 4000;
+    }
+
     #divheader {
-        cursor: move;
-        background-color: green;
-        width: 200px;
-        height: 20px;
+        cursor: pointer;
+        background-color: #92C7A3;
+        text-align: right;
+        width: 500px;
+        height: 25px;
+        z-index: 2000;
+    }
+
+    button {
+      background-color: #92C7A3;
+      border: none;
+      text-align: center;
+    }
+
+    button:hover {
+      background-color: #588566;
+      font-size: 20px;
     }
 </style>
 <div id="divwindow">
-<div id="divheader">Click here to move</div>
+    <div id="divheader"><button>X</button></div>
+    <div id="divcontent">sdg</div>
 </div>
 
 `
@@ -32,10 +56,18 @@ customElements.define('desktop-window',
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
+      const draggableElement = this.shadowRoot.querySelector('#divwindow')
+      this.divContent = this.shadowRoot.querySelector('#divcontent')
+      this.header = this.shadowRoot.querySelector('#divheader')
+      this.button = this.shadowRoot.querySelector('button')
 
-      const el = this.shadowRoot.querySelector('#divwindow')
+      this.button.addEventListener('click', (event) => {
+        draggableElement.style.display = 'none'
+      })
 
-      el.addEventListener('mousedown', mousedown)
+
+      draggableElement.addEventListener('mousedown', mousedown)
+      this.divContent.style.pointerEvents = 'none'
       /**
        * @param event
        */
@@ -53,15 +85,14 @@ customElements.define('desktop-window',
           const newX = prevX - event.clientX
           const newY = prevY - event.clientY
 
-          const rect = el.getBoundingClientRect()
+          const rect = draggableElement.getBoundingClientRect()
 
-          el.style.left = rect.left - newX + 'px'
-          el.style.top = rect.top - newY + 'px'
+          draggableElement.style.left = rect.left - newX + 'px'
+          draggableElement.style.top = rect.top - newY + 'px'
 
           prevX = event.clientX
           prevY = event.clientY
         }
-
         /**
          *
          */

@@ -5,8 +5,8 @@ template.innerHTML = `
   .mainwrapper {
   display: flex;
   justify-content: center;
-  width: 100vw;
-  height: 100vh;
+  width: 99,5vw;
+  height: 99vh;
 }
 
 .navbar {
@@ -23,7 +23,7 @@ template.innerHTML = `
 
 .app {
   transition:all .2s ease;
-  margin: 8px 5px 25px 30px;
+  margin: 8px 5px 25px 20px;
   width: 30px;
   height: 30px;
   background-color: #606060;
@@ -39,18 +39,21 @@ template.innerHTML = `
 
 img {
   width: 100%;
-  max-height: 100%;
+  height: 100%;
 }
+
+
+
 </style>
 
 <div class="mainwrapper">
+<div class="window"></div>
 <img src = "js/components/desktop-main/lib/grey.jpg">
 <div class="navbar">
 <button type="button" class="app left"></button>
 <button type="button" class="app middle"></button>
 <button type="button" class="app right"></button>
 <button type="button" class="app right"></button>
-</div>
 </div>
 </div>
 
@@ -69,10 +72,13 @@ customElements.define('desktop-main',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
       this.button = this.shadowRoot.querySelector('button')
+      this.mainwrapper = this.shadowRoot.querySelector('.mainwrapper')
+      this.window = this.shadowRoot.querySelector('.window')
 
       this.button.addEventListener('click', (event) => {
+        this.desktopWindow = document.createElement('desktop-window')
+      this.window.appendChild(this.desktopWindow)
         console.log('i knappen')
-        // document.createElement('desktop-window')
       })
     }
   })
