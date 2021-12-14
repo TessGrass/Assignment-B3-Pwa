@@ -5,8 +5,8 @@ template.innerHTML = `
   .mainwrapper {
   display: flex;
   justify-content: center;
-  width: 99,5vw;
-  height: 99vh;
+  width: 100vw;
+  height: 100vh;
 }
 
 .navbar {
@@ -74,8 +74,13 @@ customElements.define('desktop-main',
 
       this.button.addEventListener('click', (event) => {
         this.desktopWindow = document.createElement('desktop-window')
-      this.window.appendChild(this.desktopWindow)
-        console.log('i knappen')
+        this.window.appendChild(this.desktopWindow)
       })
     }
   })
+  // spara ner alla fönster som skapas i en array, när ett fönster klickas så utlöser fönstret ett event som lyssnas på här. När det eventet körs så ska arrayen loopas och sätta z-index på alla fönster.
+  // array.map((window, index) => {
+  // if(index === det klickade fönstret) {
+    // z-index = 200, annars 100
+  // }
+  //})
