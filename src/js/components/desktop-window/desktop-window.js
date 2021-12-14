@@ -4,7 +4,7 @@ template.innerHTML = `
     #divwindow {
         position: absolute;
         width: 500px;
-        
+        height: 50px;
         background-color: #C8C8C8;
         border-radius: 10px;       
     }
@@ -60,18 +60,18 @@ customElements.define('desktop-window',
       this.divContent = this.shadowRoot.querySelector('#divcontent')
       this.header = this.shadowRoot.querySelector('#divheader')
       this.button = this.shadowRoot.querySelector('button')
+      this.zIndex = 1000
 
       this.button.addEventListener('click', (event) => {
         draggableElement.style.display = 'none'
       })
-
-
       draggableElement.addEventListener('mousedown', mousedown)
       this.divContent.style.pointerEvents = 'none'
       /**
        * @param event
        */
       function mousedown (event) {
+        draggableElement.style.zIndex = '1000'
         addEventListener('mousemove', mousemove)
         addEventListener('mouseup', mouseup)
 
@@ -97,6 +97,7 @@ customElements.define('desktop-window',
          *
          */
         function mouseup () {
+          draggableElement.style.zIndex = '0'
           window.removeEventListener('mousemove', mousemove)
           window.removeEventListener('mouseup', mouseup)
         }
