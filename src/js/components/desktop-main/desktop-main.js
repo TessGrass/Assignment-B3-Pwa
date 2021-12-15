@@ -12,7 +12,7 @@ template.innerHTML = `
   background-image: url("js/components/desktop-main/lib/grey.jpg")
 }
 
-.appearancemain {
+.alternatemain {
   display: flex;
   justify-content: center;
   width: 100vw;
@@ -22,15 +22,14 @@ template.innerHTML = `
   background-image: url("js/components/desktop-main/lib/leaves.jpg");
 }
 
-.appearancenavbar {
+.alternatenavbar {
   display: flex;
   justify-content: center;
   position:absolute;
-  opacity: 75%;
   bottom: 0;
   width: 1000px;
   height: 45px;
-  background-color: #0F0636;
+  background-color: rgba(15,6,54,0.8);
   border-radius: 15px 15px 0px 0px;
   box-shadow:
     0 0 20px 5px #fff,  /* inner white */
@@ -38,7 +37,7 @@ template.innerHTML = `
     0 0 14px 10px #0ff;
 }
 
-.appearanceapp {
+.alternateapp {
   transition:all .2s ease;
   margin: 8px 5px 25px 20px;
   width: 30px;
@@ -49,19 +48,25 @@ template.innerHTML = `
 
 }
 
+.alternateapp:hover {
+  opacity: 100%;
+  background-color: #fff;
+  width: 35px;
+  height: 35px;
+}
+
 .navbar {
   display: flex;
   justify-content: center;
   position:absolute;
-  opacity: 90%;
   bottom: 0;
   width: 1000px;
   height: 45px;
-  background-color: #C8C8C8;
+  background-color: rgba(200,200,200,0.8);
   border-radius: 15px 15px 0px 0px;
 }
 
-.app {
+.navbar .app {  
   transition:all .2s ease;
   margin: 8px 5px 25px 20px;
   width: 30px;
@@ -181,48 +186,38 @@ customElements.define('desktop-main',
 
       this.button.addEventListener('click', (event) => {
         event.stopPropagation()
-        this.margin = 100
         this.desktopWindow = document.createElement('desktop-window')
         this.desktopWindow.id = this.value++
+        // this.desktopWindow.shadowRoot.querySelector('#divwindow').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
+        // this.desktopWindow.shadowRoot.querySelector('#divwindow').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
         this.window.appendChild(this.desktopWindow)
         this.windowContainer.push(this.desktopWindow)
-        this.windowContainer.forEach(window => {
-          window.style.margin = Math.random() * this.margin.toString() + 'px'
-          console.log(window.style)
-        })
+
         this.desktopWindow.addEventListener('click', (event) => {
           this.windowContainer.forEach(window => {
-            window.focus(window === event.target)
+            window === event.target ? window.setZindexTo('3000') : window.setZindexTo('2000')
           })
         })
-          //////////
-
-        // console.log(this.windowContainer.this.window.id)
       })
 
       this.slider.addEventListener('click', (event) => {
         console.log('click')
-        this.mainWrapper.classList.toggle('appearancemain')
+        this.mainWrapper.classList.toggle('alternatemain')
         if (this.navbar.className === 'navbar') {
           this.apps.forEach(app => {
             app.removeAttribute('app')
-            app.setAttribute('class', 'appearanceapp')
+            app.setAttribute('class', 'alternateapp')
             this.navbar.classList.remove('navbar')
-          this.navbar.classList.add('appearancenavbar')
+            this.navbar.classList.add('alternatenavbar')
           })
         } else {
           this.apps.forEach(app => {
-            app.removeAttribute('appearanceapp')
+            app.removeAttribute('alternateapp')
             app.setAttribute('class', 'app')
-          this.navbar.classList.remove('appearancenavbar')
-          this.navbar.classList.add('navbar')
-        })
-      }
+            this.navbar.classList.remove('alternatenavbar')
+            this.navbar.classList.add('navbar')
+          })
+        }
       })
     }
   })
-  // spara ner alla fönster som skapas i en array, när ett fönster klickas så utlöser fönstret ett event som lyssnas på här. När det eventet körs så ska arrayen loopas och sätta z-index på alla fönster.
-  // array.map((window, index) => {
-  // if(index === det klickade fönstret) {
-    // z-index = 200, annars 100
-  

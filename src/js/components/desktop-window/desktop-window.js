@@ -130,7 +130,10 @@ customElements.define('desktop-window',
       }
     }
 
-    focus(setFocus) {
-      setFocus ? this.shadowRoot.querySelector('#divwindow').classList.add('focus') : this.shadowRoot.querySelector('#divwindow').classList.remove('focus')
+    setZindexTo(newZindex) {
+      this.shadowRoot.querySelector('#divwindow').style.zIndex = newZindex
     }
+    /* focus(setFocus) {
+      setFocus ? this.shadowRoot.querySelector('#divwindow').classList.add('focus') : this.shadowRoot.querySelector('#divwindow').classList.remove('focus')
+    } */
   })
