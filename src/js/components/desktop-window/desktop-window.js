@@ -4,7 +4,7 @@ template.innerHTML = `
     #divwindow {
       position: absolute;
       width: 500px;
-      height: 30px;
+      height: 130px;
       border-radius: 10px;       
     }
 
@@ -61,7 +61,6 @@ customElements.define('desktop-window',
       this.divContent = this.shadowRoot.querySelector('#divcontent')
       this.header = this.shadowRoot.querySelector('#divheader')
       this.button = this.shadowRoot.querySelector('button')
-      this.zIndex = 100
 
       this.button.addEventListener('click', (event) => {
         draggableElement.style.display = 'none'
@@ -85,14 +84,16 @@ customElements.define('desktop-window',
         function mousemove (event) {
           const newX = prevX - event.clientX // difference between old position and new position
           const newY = prevY - event.clientY
-          const widthValue = 508
+          const widthValue = 520
           const heightValue = 540
 
-          const rect = draggableElement.getBoundingClientRect() // checks where the object is positioned in the viewport (domRect)
+          const rect = draggableElement.getBoundingClientRect()
+          // checks where the object is positioned in the viewport (domRect)
           if (rect.x < 0) { // found in domRect, x = 0 is the furthers to the left.
             rect.x = 0
             prevX = 0
-          } else if (rect.x + widthValue > window.innerWidth) { // if X and widthValue is greater than Window.innerWidth the x-value is reduced with widthValue
+          } else if (rect.x + widthValue > window.innerWidth) {
+            // if X and widthValue is greater than Window.innerWidth the x-value is reduced with widthValue
             rect.x = window.innerWidth - widthValue
             prevX = window.innerWidth - widthValue
           }

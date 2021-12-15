@@ -7,6 +7,23 @@ template.innerHTML = `
   justify-content: center;
   width: 100vw;
   height: 100vh;
+  background-size: cover;
+  background-position-y: center;
+  background-image: url("js/components/desktop-main/lib/grey.jpg")
+}
+
+.appearance {
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-position-y: center;
+  background-image: url("js/components/desktop-main/lib/leaves.jpg");
+}
+
+.appearance img {
+
 }
 
 .navbar {
@@ -37,20 +54,77 @@ template.innerHTML = `
   height: 35px;
 }
 
-img {
-  width: 100%;
-  height: 100%;
+.visible{
+  visibility: hidden;
+}
+
+.switch {
+  margin-left: 1420px;
+  position: absolute;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  border-radius: 20%;
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(260px);
+  transform: translateX(26px);
 }
 </style>
 
 <div class="mainwrapper">
+<label class="switch">
+  <input type="checkbox">
+  <span class="slider round"></span>
+</label>
+
 <div class="window"></div>
-<img src = "js/components/desktop-main/lib/grey.jpg">
+
 <div class="navbar">
 <button type="button" class="app left"></button>
 <button type="button" class="app middle"></button>
 <button type="button" class="app right"></button>
-<button type="button" class="app right"></button>
+<button type="button" class="app far-right"></button>
 </div>
 </div>
 
@@ -69,12 +143,36 @@ customElements.define('desktop-main',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
       this.button = this.shadowRoot.querySelector('button')
-      this.mainwrapper = this.shadowRoot.querySelector('.mainwrapper')
+      this.mainWrapper = this.shadowRoot.querySelector('.mainwrapper')
       this.window = this.shadowRoot.querySelector('.window')
+      this.slider = this.shadowRoot.querySelector('input')
+      this.windowContainer = []
+      this.value = 1
+      this.zIndex = 100
 
       this.button.addEventListener('click', (event) => {
         this.desktopWindow = document.createElement('desktop-window')
+        this.desktopWindow.id = this.value++
         this.window.appendChild(this.desktopWindow)
+        this.windowContainer.push(this.window)
+
+        // console.log(this.windowContainer.this.window.id)
+      })
+      /* this.window.addEventListener('click', (event) => {
+       /*  if (this.window.event.target) {
+          this.window.style.zIndex = this.zIndex++
+          // console.log(this.window)
+        } */
+      //})
+
+      this.slider.addEventListener('click', (event) => {
+        console.log('click')
+        this.mainWrapper.classList.toggle('appearance')
+        /* if (this.mainWrapper.style.background === 'url("js/components/desktop-main/lib/grey.jpg")') {
+          this.mainWrapper.style.background = 'url("js/components/desktop-main/lib/green.jpg")'
+        } else {
+          this.mainWrapper.style.background = 'url("js/components/desktop-main/lib/grey.jpg")'
+        } */
       })
     }
   })
@@ -82,5 +180,4 @@ customElements.define('desktop-main',
   // array.map((window, index) => {
   // if(index === det klickade fönstret) {
     // z-index = 200, annars 100
-  // }
-  //})
+  
