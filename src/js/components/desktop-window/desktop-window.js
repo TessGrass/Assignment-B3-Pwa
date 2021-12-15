@@ -37,6 +37,11 @@ template.innerHTML = `
       background-color: #588566;
       font-size: 20px;
     }
+
+    .focus {
+    z-index: 3000;
+    }
+
 </style>
 <div id="divwindow">
     <div id="divheader"><button>X</button></div>
@@ -122,5 +127,9 @@ customElements.define('desktop-window',
           window.removeEventListener('mouseup', mouseup)
         }
       }
+    }
+    
+    focus(setFocus) {
+      setFocus ? this.shadowRoot.querySelector('#divwindow').classList.add('focus') : this.shadowRoot.querySelector('#divwindow').classList.remove('focus')
     }
   })

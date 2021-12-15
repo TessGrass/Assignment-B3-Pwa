@@ -22,10 +22,6 @@ template.innerHTML = `
   background-image: url("js/components/desktop-main/lib/leaves.jpg");
 }
 
-.appearance img {
-
-}
-
 .navbar {
   display: flex;
   justify-content: center;
@@ -110,6 +106,7 @@ input:checked + .slider:before {
   -ms-transform: translateX(260px);
   transform: translateX(26px);
 }
+
 </style>
 
 <div class="mainwrapper">
@@ -154,16 +151,18 @@ customElements.define('desktop-main',
         this.desktopWindow = document.createElement('desktop-window')
         this.desktopWindow.id = this.value++
         this.window.appendChild(this.desktopWindow)
-        this.windowContainer.push(this.window)
+        // this.windowContainer.push(this.window)
+          //////////
+        this.windowContainer.push(this.desktopWindow)
+        this.desktopWindow.addEventListener('click', (event) => {
+          this.windowContainer.forEach(window => {
+            window.focus(window === event.target)
+          })
+        })
+          //////////
 
         // console.log(this.windowContainer.this.window.id)
       })
-      /* this.window.addEventListener('click', (event) => {
-       /*  if (this.window.event.target) {
-          this.window.style.zIndex = this.zIndex++
-          // console.log(this.window)
-        } */
-      //})
 
       this.slider.addEventListener('click', (event) => {
         console.log('click')
