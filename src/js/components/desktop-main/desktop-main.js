@@ -9,7 +9,8 @@ template.innerHTML = `
   height: 100vh;
   background-size: cover;
   background-position-y: center;
-  background-image: url("js/components/desktop-main/lib/grey.jpg")
+  background-size: 100vw 100vh;
+  background-image: url("js/components/desktop-main/lib/monstera.jpg")
 }
 
 .alternatemain {
@@ -45,7 +46,6 @@ template.innerHTML = `
   background-color: #fff;
   border-radius: 25%;
   border: none;
-
 }
 
 .alternateapp:hover {
@@ -71,7 +71,7 @@ template.innerHTML = `
   margin: 8px 5px 25px 20px;
   width: 30px;
   height: 30px;
-  background-color: #606060;
+  background-color: #222222;
   border-radius: 25%;
   border: none;
 }
@@ -80,10 +80,6 @@ template.innerHTML = `
   background-color: #92C7A3;
   width: 35px;
   height: 35px;
-}
-
-.visible{
-  visibility: hidden;
 }
 
 .switch {
