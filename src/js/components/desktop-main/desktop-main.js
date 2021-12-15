@@ -87,8 +87,10 @@ template.innerHTML = `
 }
 
 .switch {
-  margin-left: 1420px;
+  display: block;
   position: absolute;
+  right: 10px;
+  top: 5px;
   display: inline-block;
   width: 60px;
   height: 34px;
@@ -193,7 +195,7 @@ customElements.define('desktop-main',
         this.window.appendChild(this.desktopWindow)
         this.windowContainer.push(this.desktopWindow)
 
-        this.desktopWindow.addEventListener('click', (event) => {
+        this.desktopWindow.addEventListener('mousedown', (event) => {
           this.windowContainer.forEach(window => {
             window === event.target ? window.setZindexTo('3000') : window.setZindexTo('2000')
           })

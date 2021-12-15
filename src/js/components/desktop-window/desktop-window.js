@@ -26,7 +26,6 @@ template.innerHTML = `
       border-radius: 0px 0px 10px 10px;
     }
 
-
     button {
       background-color: #92C7A3;
       border: none;
@@ -36,10 +35,6 @@ template.innerHTML = `
       text-align: center;
       background-color: #588566;
       font-size: 20px;
-    }
-
-    .focus {
-    z-index: 3000;
     }
 
 </style>
