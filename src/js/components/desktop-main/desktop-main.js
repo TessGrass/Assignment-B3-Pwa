@@ -18,7 +18,7 @@ template.innerHTML = `
   width: 100vw;
   height: 100vh;
   background-size: cover;
-  background-position-y: center;
+  background-size: 100vw 100vh;
   background-image: url("js/components/desktop-main/lib/leaves.jpg");
 }
 
@@ -107,6 +107,11 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
+.position {
+  display: flex;
+  justify-content: left;
+}
+
 </style>
 
 <div class="mainwrapper">
@@ -116,7 +121,6 @@ input:checked + .slider:before {
 </label>
 
 <div class="window"></div>
-
 <div class="navbar">
 <button type="button" class="app left"></button>
 <button type="button" class="app middle"></button>
@@ -145,14 +149,16 @@ customElements.define('desktop-main',
       this.slider = this.shadowRoot.querySelector('input')
       this.windowContainer = []
       this.value = 1
-      this.zIndex = 100
 
       this.button.addEventListener('click', (event) => {
+        event.stopPropagation()
         this.desktopWindow = document.createElement('desktop-window')
         this.desktopWindow.id = this.value++
         this.window.appendChild(this.desktopWindow)
-        // this.windowContainer.push(this.window)
-          //////////
+        /* this.windowContainer.forEach(window => {
+          window.style.margin = this.margin++
+          console.log(window.style.margin)
+        }) */
         this.windowContainer.push(this.desktopWindow)
         this.desktopWindow.addEventListener('click', (event) => {
           this.windowContainer.forEach(window => {

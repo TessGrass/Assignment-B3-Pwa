@@ -68,6 +68,7 @@ customElements.define('desktop-window',
       this.button = this.shadowRoot.querySelector('button')
 
       this.button.addEventListener('click', (event) => {
+        event.stopPropagation()
         draggableElement.style.display = 'none'
       })
       draggableElement.addEventListener('mousedown', mousedown)
@@ -128,7 +129,7 @@ customElements.define('desktop-window',
         }
       }
     }
-    
+
     focus(setFocus) {
       setFocus ? this.shadowRoot.querySelector('#divwindow').classList.add('focus') : this.shadowRoot.querySelector('#divwindow').classList.remove('focus')
     }
