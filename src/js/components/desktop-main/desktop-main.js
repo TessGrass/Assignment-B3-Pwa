@@ -12,7 +12,7 @@ template.innerHTML = `
   background-image: url("js/components/desktop-main/lib/grey.jpg")
 }
 
-.appearance {
+.appearancemain {
   display: flex;
   justify-content: center;
   width: 100vw;
@@ -20,6 +20,33 @@ template.innerHTML = `
   background-size: cover;
   background-size: 100vw 100vh;
   background-image: url("js/components/desktop-main/lib/leaves.jpg");
+}
+
+.appearancenavbar {
+  display: flex;
+  justify-content: center;
+  position:absolute;
+  opacity: 75%;
+  bottom: 0;
+  width: 1000px;
+  height: 45px;
+  background-color: #0F0636;
+  border-radius: 15px 15px 0px 0px;
+  box-shadow:
+    0 0 20px 5px #fff,  /* inner white */
+    0 0 30px 20px #6134A7, /* middle magenta */
+    0 0 14px 10px #0ff;
+}
+
+.appearanceapp {
+  transition:all .2s ease;
+  margin: 8px 5px 25px 20px;
+  width: 30px;
+  height: 30px;
+  background-color: #fff;
+  border-radius: 25%;
+  border: none;
+
 }
 
 .navbar {
@@ -94,11 +121,11 @@ template.innerHTML = `
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: #0F0636;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+  box-shadow: 0 0 1px #0F0636;
 }
 
 input:checked + .slider:before {
@@ -122,10 +149,10 @@ input:checked + .slider:before {
 
 <div class="window"></div>
 <div class="navbar">
-<button type="button" class="app left"></button>
-<button type="button" class="app middle"></button>
-<button type="button" class="app right"></button>
-<button type="button" class="app far-right"></button>
+<button type="button" class="app"></button>
+<button type="button" class="app"></button>
+<button type="button" class="app"></button>
+<button type="button" class="app"></button>
 </div>
 </div>
 
@@ -144,22 +171,25 @@ customElements.define('desktop-main',
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
       this.button = this.shadowRoot.querySelector('button')
+      this.apps = this.shadowRoot.querySelectorAll('.app')
       this.mainWrapper = this.shadowRoot.querySelector('.mainwrapper')
       this.window = this.shadowRoot.querySelector('.window')
       this.slider = this.shadowRoot.querySelector('input')
+      this.navbar = this.shadowRoot.querySelector('.navbar')
       this.windowContainer = []
       this.value = 1
 
       this.button.addEventListener('click', (event) => {
         event.stopPropagation()
+        this.margin = 100
         this.desktopWindow = document.createElement('desktop-window')
         this.desktopWindow.id = this.value++
         this.window.appendChild(this.desktopWindow)
-        /* this.windowContainer.forEach(window => {
-          window.style.margin = this.margin++
-          console.log(window.style.margin)
-        }) */
         this.windowContainer.push(this.desktopWindow)
+        this.windowContainer.forEach(window => {
+          window.style.margin = Math.random() * this.margin.toString() + 'px'
+          console.log(window.style)
+        })
         this.desktopWindow.addEventListener('click', (event) => {
           this.windowContainer.forEach(window => {
             window.focus(window === event.target)
@@ -172,12 +202,22 @@ customElements.define('desktop-main',
 
       this.slider.addEventListener('click', (event) => {
         console.log('click')
-        this.mainWrapper.classList.toggle('appearance')
-        /* if (this.mainWrapper.style.background === 'url("js/components/desktop-main/lib/grey.jpg")') {
-          this.mainWrapper.style.background = 'url("js/components/desktop-main/lib/green.jpg")'
+        this.mainWrapper.classList.toggle('appearancemain')
+        if (this.navbar.className === 'navbar') {
+          this.apps.forEach(app => {
+            app.removeAttribute('app')
+            app.setAttribute('class', 'appearanceapp')
+            this.navbar.classList.remove('navbar')
+          this.navbar.classList.add('appearancenavbar')
+          })
         } else {
-          this.mainWrapper.style.background = 'url("js/components/desktop-main/lib/grey.jpg")'
-        } */
+          this.apps.forEach(app => {
+            app.removeAttribute('appearanceapp')
+            app.setAttribute('class', 'app')
+          this.navbar.classList.remove('appearancenavbar')
+          this.navbar.classList.add('navbar')
+        })
+      }
       })
     }
   })
