@@ -49,7 +49,6 @@ template.innerHTML = `
 }
 
 .alternateapp:hover {
-  opacity: 100%;
   background-color: #fff;
   width: 35px;
   height: 35px;
