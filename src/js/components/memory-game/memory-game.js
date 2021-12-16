@@ -25,8 +25,6 @@ template.innerHTML = `
   }  
 
   input {
-    margin-top: 10%;
-    margin-left: 20px;
     justify-content: center;
     width: 70px;
     height: 70px;
@@ -68,20 +66,18 @@ template.innerHTML = `
     }
     
     #volume {
-      display: flex;
+    display: flex;
     justify-content: center;
     }
 
     #buttonwrapper {
+    min-width: 300px;
+    min-height: 300px;
     display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  }
-
-  form {
-    margin: auto;
-  }
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    }
 
 </style>
 
@@ -248,7 +244,6 @@ customElements.define('memory-game',
         this.activeTiles = []
         this.totalTries++
         this.h1Text.textContent = `Total tries: ${this.totalTries}`
-        console.log('h1')
       }
     }
 
