@@ -103,59 +103,26 @@ customElements.define('flipping-tile',
         this.activeCard = !this.activeCard // växlar mellan sant / falskt
         this.activeCard && this.dispatchEvent(new CustomEvent('activeTile', { // om kortet är true
           detail: {
-           alt: this.querySelector('img').getAttribute('alt')
+            alt: this.querySelector('img').getAttribute('alt')
           }
         }))
       })
       addEventListener('hidematchedcards', (event) => {
         if (this.frontCard.classList.value !== 'inactive') {
           this.style.visibility = 'hidden'
-        console.log(this.frontCard)
+          console.log(this.frontCard)
         }
       })
 
-      addEventListener('flipunmatchedcards', (event) => {      
+      addEventListener('flipunmatchedcards', (event) => {
         if (this.frontCard.classList.value !== 'inactive') {
-          console.log('röv')
           this.container.classList.toggle('flipCard')
           this.frontCard.classList.toggle('inactive')
           this.backCard.classList.toggle('inactive')
           this.activeCard = !this.activeCard
-           // this.container.classList.toggle('flipCard')
-          //(this.frontCard.classList.toggle('inactive')
-          //this.backCard.classList.toggle('inactive')
-          // console.log(this.frontCard.toggle('flipCard'))
         }
       })
     }
-
-    /*static get observedAttributes() {
-      console.log('98')
-    return ['hidematchedcards']
-    }*/
-
-    /*attributeChangedCallback() {
-      console.log('hej')
-    }*/
-
-    // i klickeventet så behöver knappen bli disabled när den blir aktiv
-    /**
-     *
-     *
-     * @param {*} name
-     * @param {*} oldValue
-     * @param {*} newValue
-     */
-
-    /* flippingCard () {
-      this.classList.add('flip')
-      if (!this.hasFlippedCard) {
-        this.hasFlippedCard = true
-      }
-      this.firstCard = this
-      console.log(this.classList)
-      console.log(this.hasFlippedCard, this.firstCard)
-    } */
   })
 
 // <div part="back" id="back"><slot name="back"></slot></div>

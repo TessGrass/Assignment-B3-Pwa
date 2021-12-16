@@ -175,24 +175,29 @@ customElements.define('desktop-main',
       this.button = this.shadowRoot.querySelector('button')
       this.apps = this.shadowRoot.querySelectorAll('.app')
       this.mainWrapper = this.shadowRoot.querySelector('.mainwrapper')
-      this.window = this.shadowRoot.querySelector('.window')
+      this.mainWindow = this.shadowRoot.querySelector('.window')
       this.slider = this.shadowRoot.querySelector('input')
       this.navbar = this.shadowRoot.querySelector('.navbar')
-      this.windowContainer = []
       this.value = 1
 
       this.button.addEventListener('click', (event) => {
         event.stopPropagation()
-        this.desktopWindow = document.createElement('desktop-window')
-        this.desktopWindow.id = this.value++
-        // this.desktopWindow.shadowRoot.querySelector('#divwindow').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
-        // this.desktopWindow.shadowRoot.querySelector('#divwindow').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
-        this.window.appendChild(this.desktopWindow)
-        this.windowContainer.push(this.desktopWindow)
+        const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
+        this.memoryGame = document.createElement('memory-game')
+        desktopWindow.id = this.value++
+        desktopWindow.shadowRoot.querySelector('#divwindow').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
+        desktopWindow.shadowRoot.querySelector('#divwindow').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
+        desktopWindow.divContent.appendChild(this.memoryGame)
+        this.mainWindow.appendChild(desktopWindow)
+        desktopWindow.setZindexTo(this.getHighestZindex())
 
-        this.desktopWindow.addEventListener('mousedown', (event) => {
-          this.windowContainer.forEach(window => {
-            window === event.target ? window.setZindexTo('3000') : window.setZindexTo('2000')
+        desktopWindow.addEventListener('closewindow', (event) => {
+          desktopWindow.remove() // tas bort från domen
+        })
+
+        desktopWindow.addEventListener('mousedown', (event) => {
+          Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // hämtar alla desktop-window vi har appendat från domen.
+            window === event.target && window.setZindexTo(this.getHighestZindex() + 1)
           })
         })
       })
@@ -216,5 +221,15 @@ customElements.define('desktop-main',
           })
         }
       })
+    }
+
+    getHighestZindex () {
+      let highest = 0
+      Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // hämtar alla desktop-window vi har appendat från domen.
+        if (window.getZindex() > highest) {
+          highest = window.getZindex()
+        }
+      })
+      return highest
     }
   })

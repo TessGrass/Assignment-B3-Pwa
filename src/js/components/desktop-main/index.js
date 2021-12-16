@@ -1,1 +1,1 @@
-import './desktop-main.js/'
+import './desktop-main'

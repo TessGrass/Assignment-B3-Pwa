@@ -2,26 +2,25 @@ const template = document.createElement('template')
 template.innerHTML = `
 <style>
     #divwindow {
+      display: inline-block;
       position: absolute;
-      width: 500px;
       height: 130px;
-      border-radius: 10px;       
+      border-radius: 10px;
+      margin: 0;  
     }
 
     #divheader {
-      display: flex;
-      justify-content: right;
+      margin: 0;
       cursor: pointer;
       background-color: #92C7A3;
       text-align: right;
-      width: 500px;
+      max-width: 900px;
       height: 30px;
       z-index: 2000;
     }
     
     #divcontent {
-      width: 500px;
-      height: 500px;
+      display: inline-block;
       background-color: #C8C8C8;
       border-radius: 0px 0px 10px 10px;
     }
@@ -64,10 +63,12 @@ customElements.define('desktop-window',
 
       this.button.addEventListener('click', (event) => {
         event.stopPropagation()
-        draggableElement.style.display = 'none'
+        this.dispatchEvent(new CustomEvent('closewindow', {
+          bubbles: true
+        }))
       })
       draggableElement.addEventListener('mousedown', mousedown)
-      this.divContent.style.pointerEvents = 'none'
+      // this.divContent.style.pointerEvents = 'none'
 
       /**
        * @param event
@@ -127,6 +128,10 @@ customElements.define('desktop-window',
 
     setZindexTo(newZindex) {
       this.shadowRoot.querySelector('#divwindow').style.zIndex = newZindex
+    }
+
+    getZindex() {
+      return this.shadowRoot.querySelector('#divwindow').style.zIndex
     }
     /* focus(setFocus) {
       setFocus ? this.shadowRoot.querySelector('#divwindow').classList.add('focus') : this.shadowRoot.querySelector('#divwindow').classList.remove('focus')

@@ -5,18 +5,19 @@ template.innerHTML = `
     width: 300px;
     height: 300px;
     margin: auto;
-    padding: 10px;
+    padding: 25px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
     align-content: center;
     background: #F5F5F5;
+    z-index: 3000;
   }
 
-  .time-volume {
+  .time {
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: wrap;  
   }
 
   .no-click {
@@ -24,7 +25,8 @@ template.innerHTML = `
   }  
 
   input {
-    margin-top: 50px;
+    margin-top: 10%;
+    margin-left: 20px;
     justify-content: center;
     width: 70px;
     height: 70px;
@@ -32,27 +34,23 @@ template.innerHTML = `
     border: 1px solid;
   }
 
-  .inactive {
-    display: none;
-  }
-
-  form #level {
-    justify-content: center;
-    align-content: center;
-    text-content: center;
-  }
-
   input img {
     width: 50%;
     height: 50%;
   }
 
+  .inactive {
+    display: none;
+  }
+
   h1 {
+    text-align: center;
     font-size: 20px;
     font-family: "Helvetica" "Arial" "Sans-Serif";
   }
 
   .volumebutton {
+    left: 50%;
     height: 35px;  
     width: 30px;
     border: none;
@@ -68,12 +66,28 @@ template.innerHTML = `
     background-size: cover;
     background-image: url('./images/volumebuttonoff.svg')
     }
+    
+    #volume {
+      display: flex;
+    justify-content: center;
+    }
+
+    #buttonwrapper {
+    display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  }
+
+  form {
+    margin: auto;
+  }
 
 </style>
 
 
 <div class="memorywrapper"></div>
-<div class ="time-volume">
+<div class ="time">
 <h1></h1>
 </div>
 <form id="level">
@@ -87,6 +101,7 @@ template.innerHTML = `
 <form id="volume">
     <button type ="button" class="volumebutton"></button>
 </form>
+
 
 `
 customElements.define('memory-game',
@@ -110,13 +125,11 @@ customElements.define('memory-game',
       this.buttonHard = this.shadowRoot.querySelector('.hard')
       this.buttonVolume = this.shadowRoot.querySelector('.volumebutton')
       this.buttonVolume.classList.add('inactive')
-      // this.buttonVolume.setAttribute('class', 'inactive')
       this.h1Text = this.shadowRoot.querySelector('h1')
       this.buttonTryAgain = this.shadowRoot.querySelector('inactive')
       this.flipUnmatchedCards = this.flipUnmatchedCards.bind(this) // annars hittar vi inte t.ex. this.memorywrapper i funktionen.
       this.hideMatchedCards = this.hideMatchedCards.bind(this)
       this.matchSound = new Audio('images/gamenotis.wav')
-      // this.buttonVolume.setAttribute('src', './images/volumebutton.svg')
       this.matchSound.muted = false
 
       this.totalTries = 0
@@ -183,9 +196,7 @@ customElements.define('memory-game',
         this.matchSound.muted = !this.matchSound.muted
         this.buttonVolume.classList.toggle('volumebutton')
         this.buttonVolume.classList.toggle('volumeoff')
-        // this.buttonVolume.setAttribute('src', './images/volumebuttonoff.svg')
       })
-
 
       this.activeTiles = []
       this.matchedCards = []
@@ -244,7 +255,8 @@ customElements.define('memory-game',
     hideMatchedCards () {
       this.memoryWrapper.style.pointerEvents = 'auto'
       this.dispatchEvent(new CustomEvent('hidematchedcards', {
-        bubbles: true
+        bubbles: true,
+        composed: true
       }))
     }
 

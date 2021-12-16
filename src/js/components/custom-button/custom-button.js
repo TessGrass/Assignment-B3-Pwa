@@ -25,7 +25,7 @@ customElements.define('custom-buttom',
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
-        this.button = this.shadowRoot.querySelector('input')
+      this.button = this.shadowRoot.querySelector('input')
 
       this.addEventListener('click', (event) => {
       })
