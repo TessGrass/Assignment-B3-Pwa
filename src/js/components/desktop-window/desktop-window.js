@@ -86,8 +86,8 @@ customElements.define('desktop-window',
         function mousemove (event) {
           const newX = prevX - event.clientX // difference between old position and new position
           const newY = prevY - event.clientY
-          const widthValue = 520
-          const heightValue = 540
+          const widthValue = 300
+          const heightValue = 340
 
           const rect = draggableElement.getBoundingClientRect()
           // checks where the object is positioned in the viewport (domRect)

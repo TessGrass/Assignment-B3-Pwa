@@ -12,7 +12,6 @@ template.innerHTML = `
     justify-content: center;
     align-content: center;
     background: #F5F5F5;
-    z-index: 3000;
   }
 
   .time {
@@ -41,6 +40,10 @@ template.innerHTML = `
     display: none;
   }
 
+  .active {
+    display: flex;
+  }
+
   h1 {
     text-align: center;
     font-size: 20px;
@@ -48,6 +51,7 @@ template.innerHTML = `
   }
 
   .volumebutton {
+    margin-bottom: 10px;
     left: 50%;
     height: 35px;  
     width: 30px;
@@ -57,6 +61,7 @@ template.innerHTML = `
 }
 
   .volumeoff {
+    margin-bottom: 10px;
     height: 35px;  
     width: 30px;
     border: none;
@@ -79,10 +84,20 @@ template.innerHTML = `
     margin: 0;
     }
 
+    #restart {
+      margin-top: 5px;
+      display: flex;
+      justify-content: center;
+    align-content: center;
+    }
+
 </style>
 
 
 <div class="memorywrapper"></div>
+<form id="restart">
+    <input type="button" id="tryagain" value="Try Again" class="inactive">
+  </form>
 <div class ="time">
 <h1></h1>
 </div>
@@ -91,9 +106,8 @@ template.innerHTML = `
         <input type="button" id="easy" value="easy" class="easy">
         <input type="button" id="medium" value="medium" class="medium">
         <input type="button" id="hard" value="hard" class="hard">
-        <input type="button" id="hard" value="Try Again" class="inactive">
     </div>
-</form>
+  </form>
 <form id="volume">
     <button type ="button" class="volumebutton"></button>
 </form>
@@ -122,14 +136,14 @@ customElements.define('memory-game',
       this.buttonVolume = this.shadowRoot.querySelector('.volumebutton')
       this.buttonVolume.classList.add('inactive')
       this.h1Text = this.shadowRoot.querySelector('h1')
-      this.buttonTryAgain = this.shadowRoot.querySelector('inactive')
+      this.buttonTryAgain = this.shadowRoot.querySelector('#tryagain')
       this.flipUnmatchedCards = this.flipUnmatchedCards.bind(this) // annars hittar vi inte t.ex. this.memorywrapper i funktionen.
       this.hideMatchedCards = this.hideMatchedCards.bind(this)
       this.matchSound = new Audio('images/gamenotis.wav')
       this.matchSound.muted = false
 
       this.totalTries = 0
-      this.sizeOfBoard = 0
+      this.sizeOfBoard = 8
 
       this.images = [{
         name: 'tv',
@@ -194,6 +208,12 @@ customElements.define('memory-game',
         this.buttonVolume.classList.toggle('volumeoff')
       })
 
+      this.buttonTryAgain.addEventListener('click', (event) => {
+        event.preventDefault()
+        this.restartGame()
+        console.log('hej')
+      })
+
       this.activeTiles = []
       this.matchedCards = []
     }
@@ -241,6 +261,9 @@ customElements.define('memory-game',
         } else {
           setTimeout(this.flipUnmatchedCards, 1000)
         }
+        if (this.matchedCards.length === this.sizeOfBoard) {
+          this.buttonTryAgain.classList.toggle('inactive')
+        }
         this.activeTiles = []
         this.totalTries++
         this.h1Text.textContent = `Total tries: ${this.totalTries}`
@@ -261,5 +284,15 @@ customElements.define('memory-game',
         bubbles: true,
         composed: true
       }))
+    }
+
+    restartGame() {
+      this.activeTiles = []
+      this.matchedCards = []
+      this.buttonTryAgain.classList.toggle('inactive')
+      this.memoryWrapper.classList.toggle('active')
+      // this.buttonTryAgain.classList.toggle('#tryagain')
+      this.buttonWrapper.style.display = 'flex'
+      this.memoryWrapper.appendChild(this.buttonWrapper)
     }
   })
