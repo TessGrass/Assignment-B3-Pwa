@@ -67,7 +67,7 @@ customElements.define('desktop-window',
           bubbles: true
         }))
       })
-      draggableElement.addEventListener('mousedown', mousedown)
+      this.header.addEventListener('mousedown', mousedown)
       // this.divContent.style.pointerEvents = 'none'
 
       /**

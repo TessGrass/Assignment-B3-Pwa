@@ -39,7 +39,7 @@ template.innerHTML = `
   }
 </style>
 <div id="gamewrapper">
-<div id="red" style="background-color: #e50000" class="vertical"><div class="bubble"></div></div>
+<div id="red" style="background-color: #e50000" class="vertical"></div>
 <div id="orange" style="background-color: orange" class="vertical"></div>
 <div id="yellow" style="background-color: yellow" class="vertical"></div>
 <div id="green" style="background-color: green" class="vertical"></div>
@@ -60,19 +60,20 @@ customElements.define('popit-game',
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
-      // this.bubbleRed = this.shadowRoot.querySelector('.bubble')
+      this.bubbleRed = this.shadowRoot.querySelector('.bubble')
       this.divRed = this.shadowRoot.querySelector('#red')
       this.allDiv = this.shadowRoot.querySelectorAll('div')
       this.gameWrapper = this.shadowRoot.querySelector('#gamewrapper')
 
-      this.addEventListener('click', (event) => {
-        console.log('här')
-        //this.bubbleRed.classList.toggle('bubble')
-        // this.bubbleRed.classList.toggle('bubble-pop')
-        for (let i = 0; i < 5; i++) {
-            this.bubbleRed = document.createElement('bubble')
-            this.divRed.appendChild(this.bubbleRed)
+      for (let i = 0; i < 6; i++) {
+            const bubbleRed = document.createElement('div')
+            bubbleRed.classList.add('bubble')
+            this.divRed.appendChild(bubbleRed)
+
+            bubbleRed.addEventListener('click', (event) => {
+                bubbleRed.classList.toggle('bubble')
+                bubbleRed.classList.toggle('bubble-pop')
+              })
           }
-      })
     }
   })

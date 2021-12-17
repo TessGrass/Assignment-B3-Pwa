@@ -63,6 +63,6 @@ customElements.define('search-image',
 
     const fetchedUrl = await fetch(url)
         const response = await fetchedUrl.json()
-        console.log(response.results)
+        console.log(response.results[0].urls)
     }
   })
