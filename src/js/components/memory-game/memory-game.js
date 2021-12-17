@@ -129,14 +129,14 @@ customElements.define('memory-game',
         .appendChild(template.content.cloneNode(true))
       this.memoryWrapper = this.shadowRoot.querySelector('.memorywrapper')
       this.buttonWrapper = this.shadowRoot.querySelector('#buttonwrapper')
-      this.memoryWrapper.classList.add('inactive')
       this.buttonEasy = this.shadowRoot.querySelector('.easy')
       this.buttonMedium = this.shadowRoot.querySelector('.medium')
       this.buttonHard = this.shadowRoot.querySelector('.hard')
       this.buttonVolume = this.shadowRoot.querySelector('.volumebutton')
-      this.buttonVolume.classList.add('inactive')
-      this.h1Text = this.shadowRoot.querySelector('h1')
       this.buttonTryAgain = this.shadowRoot.querySelector('#tryagain')
+      this.h1Text = this.shadowRoot.querySelector('h1')
+      this.memoryWrapper.style.display = 'none'
+      this.buttonVolume.classList.add('inactive')
       this.flipUnmatchedCards = this.flipUnmatchedCards.bind(this) // annars hittar vi inte t.ex. this.memorywrapper i funktionen.
       this.hideMatchedCards = this.hideMatchedCards.bind(this)
       this.matchSound = new Audio('images/gamenotis.wav')
@@ -211,7 +211,6 @@ customElements.define('memory-game',
       this.buttonTryAgain.addEventListener('click', (event) => {
         event.preventDefault()
         this.restartGame()
-        console.log('hej')
       })
 
       this.activeTiles = []
@@ -221,8 +220,8 @@ customElements.define('memory-game',
     createTiles() {
       const tiles = []
       this.buttonWrapper.style.display = 'none'
-      this.buttonVolume.classList.toggle('inactive')
-      this.memoryWrapper.classList.toggle('inactive') // togglar mellan synlig / ej synlig.
+      this.buttonVolume.style.display = 'flex'
+      this.memoryWrapper.style.display = 'flex' // togglar mellan synlig / ej synlig.
       for (let i = 0; i < this.sizeOfBoard; i++) {
         for (let j = 0; j < 2; j++) { // för varje yttre iteration så görs två iterationer och flipping-tile skapas
           const tile = document.createElement('flipping-tile')
@@ -269,7 +268,7 @@ customElements.define('memory-game',
         this.h1Text.textContent = `Total tries: ${this.totalTries}`
       }
     }
-
+    
     hideMatchedCards () {
       this.memoryWrapper.style.pointerEvents = 'auto'
       this.dispatchEvent(new CustomEvent('hidematchedcards', {
@@ -289,10 +288,12 @@ customElements.define('memory-game',
     restartGame() {
       this.activeTiles = []
       this.matchedCards = []
+      this.totalTries = 0
       this.buttonTryAgain.classList.toggle('inactive')
-      this.memoryWrapper.classList.toggle('active')
-      // this.buttonTryAgain.classList.toggle('#tryagain')
+      console.log(this.memorywrapper)
+      // this.memoryWrapper.classList.toggle('inactive')
+      this.memoryWrapper.style.display = 'none'
       this.buttonWrapper.style.display = 'flex'
-      this.memoryWrapper.appendChild(this.buttonWrapper)
+      // this.memoryWrapper.appendChild(this.buttonWrapper)
     }
   })
