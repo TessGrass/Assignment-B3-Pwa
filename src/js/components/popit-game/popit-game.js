@@ -12,15 +12,15 @@ template.innerHTML = `
   .vertical {
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-item: center;
       padding-left: 5px;
+      padding-top: 5px;
       width: 70px;
       height: 500px;
       box-shadow: inset 0px 0px 10px rgba(0,0,0,0.5)
   }
 
-  #bubble {
+  .bubble {
       width: 55px;
       height: 55px;
       border-radius: 50%;
@@ -28,7 +28,7 @@ template.innerHTML = `
       background-image: radial-gradient(#e0b2b2, red, #e50000);
   }
 
-  #bubble-pop {
+  .bubble-pop {
     width: 55px;
       height: 55px;
       border-radius: 50%;
@@ -39,7 +39,7 @@ template.innerHTML = `
   }
 </style>
 <div id="gamewrapper">
-<div id="red" style="background-color: #e50000" class="vertical"><div id="bubble"></div><div id="bubble-pop"></div></div>
+<div id="red" style="background-color: #e50000" class="vertical"><div class="bubble"></div></div>
 <div id="orange" style="background-color: orange" class="vertical"></div>
 <div id="yellow" style="background-color: yellow" class="vertical"></div>
 <div id="green" style="background-color: green" class="vertical"></div>
@@ -60,8 +60,19 @@ customElements.define('popit-game',
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
+      // this.bubbleRed = this.shadowRoot.querySelector('.bubble')
+      this.divRed = this.shadowRoot.querySelector('#red')
+      this.allDiv = this.shadowRoot.querySelectorAll('div')
+      this.gameWrapper = this.shadowRoot.querySelector('#gamewrapper')
 
       this.addEventListener('click', (event) => {
+        console.log('här')
+        //this.bubbleRed.classList.toggle('bubble')
+        // this.bubbleRed.classList.toggle('bubble-pop')
+        for (let i = 0; i < 5; i++) {
+            this.bubbleRed = document.createElement('bubble')
+            this.divRed.appendChild(this.bubbleRed)
+          }
       })
     }
   })
