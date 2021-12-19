@@ -66,14 +66,14 @@ customElements.define('popit-game',
       this.gameWrapper = this.shadowRoot.querySelector('#gamewrapper')
 
       for (let i = 0; i < 6; i++) {
-            const bubbleRed = document.createElement('div')
-            bubbleRed.classList.add('bubble')
-            this.divRed.appendChild(bubbleRed)
+        const bubbleRed = document.createElement('div')
+        bubbleRed.classList.add('bubble')
+        this.divRed.appendChild(bubbleRed)
 
-            bubbleRed.addEventListener('click', (event) => {
-                bubbleRed.classList.toggle('bubble')
-                bubbleRed.classList.toggle('bubble-pop')
-              })
-          }
+        bubbleRed.addEventListener('click', (event) => {
+          bubbleRed.classList.toggle('bubble')
+          bubbleRed.classList.toggle('bubble-pop')
+        })
+      }
     }
   })
