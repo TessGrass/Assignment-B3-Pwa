@@ -1,7 +1,8 @@
+
 const template = document.createElement('template')
 template.innerHTML = `
 <style>
-    #divwindow {
+    #windowcontainer {
       display: inline-block;
       position: absolute;
       height: 130px;
@@ -15,13 +16,13 @@ template.innerHTML = `
       background-color: #92C7A3;
       text-align: right;
       max-width: 900px;
-      height: 30px;
+      height: 27px;
       z-index: 2000;
     }
     
     #divcontent {
       display: inline-block;
-      background-color: #C8C8C8;
+      background-color: white;
       border-radius: 0px 0px 10px 10px;
     }
 
@@ -37,7 +38,7 @@ template.innerHTML = `
     }
 
 </style>
-<div id="divwindow">
+<div id="windowcontainer">
     <div id="divheader"><button>X</button></div>
     <div id="divcontent"></div>
 </div>
@@ -56,7 +57,7 @@ customElements.define('desktop-window',
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
-      const draggableElement = this.shadowRoot.querySelector('#divwindow')
+      const windowContainer = this.shadowRoot.querySelector('#windowcontainer')
       this.divContent = this.shadowRoot.querySelector('#divcontent')
       this.header = this.shadowRoot.querySelector('#divheader')
       this.button = this.shadowRoot.querySelector('button')
@@ -89,7 +90,7 @@ customElements.define('desktop-window',
           const widthValue = 300
           const heightValue = 340
 
-          const rect = draggableElement.getBoundingClientRect()
+          const rect = windowContainer.getBoundingClientRect()
           // checks where the object is positioned in the viewport (domRect)
           if (rect.x < 0) { // found in domRect, x = 0 is the furthers to the left.
             rect.x = 0
@@ -100,7 +101,7 @@ customElements.define('desktop-window',
             prevX = window.innerWidth - widthValue
           }
           if (rect.x >= 0 && rect.x <= window.innerWidth - widthValue) { // if rect x is smaller than 0 AND the innerwith - widthValue, the window can't be moved further outside.
-            draggableElement.style.left = rect.left - newX + 'px'
+            windowContainer.style.left = rect.left - newX + 'px'
             prevX = event.clientX
           }
 
@@ -112,7 +113,7 @@ customElements.define('desktop-window',
             prevY = window.innerHeight - heightValue
           }
           if (rect.y >= 0 && rect.y <= window.innerHeight - heightValue) {
-            draggableElement.style.top = rect.top - newY + 'px'
+            windowContainer.style.top = rect.top - newY + 'px'
             prevY = event.clientY
           }
         }
@@ -127,11 +128,11 @@ customElements.define('desktop-window',
     }
 
     setZindexTo(newZindex) {
-      this.shadowRoot.querySelector('#divwindow').style.zIndex = newZindex
+      this.shadowRoot.querySelector('#windowcontainer').style.zIndex = newZindex
     }
 
     getZindex() {
-      return this.shadowRoot.querySelector('#divwindow').style.zIndex
+      return this.shadowRoot.querySelector('#windowcontainer').style.zIndex
     }
     /* focus(setFocus) {
       setFocus ? this.shadowRoot.querySelector('#divwindow').classList.add('focus') : this.shadowRoot.querySelector('#divwindow').classList.remove('focus')

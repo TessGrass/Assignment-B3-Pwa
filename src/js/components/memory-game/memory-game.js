@@ -182,6 +182,8 @@ customElements.define('memory-game',
       this.buttonEasy.addEventListener('click', (event) => {
         event.preventDefault()
         this.sizeOfBoard = 2
+        this.memoryWrapper.style.width = '300px'
+        this.memoryWrapper.style.height = '300px'
         this.createTiles()
       })
 
@@ -289,10 +291,12 @@ customElements.define('memory-game',
       this.activeTiles = []
       this.matchedCards = []
       this.totalTries = 0
+      console.log('här')
       this.buttonTryAgain.classList.toggle('inactive')
-      console.log(this.memorywrapper)
       // this.memoryWrapper.classList.toggle('inactive')
+      this.memoryWrapper.innerHTML = ''
       this.memoryWrapper.style.display = 'none'
+      console.log(this.memoryWrapper)
       this.buttonWrapper.style.display = 'flex'
       // this.memoryWrapper.appendChild(this.buttonWrapper)
     }

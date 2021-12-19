@@ -151,10 +151,12 @@ input:checked + .slider:before {
 
 <div class="window"></div>
 <div class="navbar">
+  <form>
+<button type="button" id="memory" class="app"></button>
+<button type="button" id ="chat "class="app"></button>
+<button type="button" id="search-images" class="app"></button>
 <button type="button" class="app"></button>
-<button type="button" class="app"></button>
-<button type="button" class="app"></button>
-<button type="button" class="app"></button>
+</form>
 </div>
 </div>
 
@@ -172,21 +174,23 @@ customElements.define('desktop-main',
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
-      this.button = this.shadowRoot.querySelector('button')
+      this.buttonMemory = this.shadowRoot.querySelector('#memory')
+      this.buttonSearchImages = this.shadowRoot.querySelector('#search-images')
       this.apps = this.shadowRoot.querySelectorAll('.app')
       this.mainWrapper = this.shadowRoot.querySelector('.mainwrapper')
       this.mainWindow = this.shadowRoot.querySelector('.window')
       this.slider = this.shadowRoot.querySelector('input')
       this.navbar = this.shadowRoot.querySelector('.navbar')
+      this.form = this.shadowRoot.querySelector('form')
       this.value = 1
 
-      this.button.addEventListener('click', (event) => {
+      this.buttonMemory.addEventListener('click', (event) => {
         event.stopPropagation()
         const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
         this.memoryGame = document.createElement('memory-game')
         desktopWindow.id = this.value++
-        desktopWindow.shadowRoot.querySelector('#divwindow').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
-        desktopWindow.shadowRoot.querySelector('#divwindow').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
+        desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
+        desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
         desktopWindow.divContent.appendChild(this.memoryGame)
         this.mainWindow.appendChild(desktopWindow)
         desktopWindow.setZindexTo(this.getHighestZindex())
@@ -201,6 +205,32 @@ customElements.define('desktop-main',
           })
         })
       })
+
+      this.buttonSearchImages.addEventListener('click', (event) => {
+        event.stopPropagation()
+        const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
+        this.searchImage = document.createElement('search-image')
+        
+        desktopWindow.divContent.style.minHeight = '500px'
+        desktopWindow.id = this.value++
+        desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
+        desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
+        desktopWindow.divContent.appendChild(this.searchImage)
+        this.mainWindow.appendChild(desktopWindow)
+        desktopWindow.setZindexTo(this.getHighestZindex())
+
+        desktopWindow.addEventListener('closewindow', (event) => {
+          desktopWindow.remove() // tas bort från domen
+        })
+
+        desktopWindow.addEventListener('mousedown', (event) => {
+          Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // hämtar alla desktop-window vi har appendat från domen.
+            window === event.target && window.setZindexTo(this.getHighestZindex() + 1)
+          })
+        })
+      })
+
+
 
       this.slider.addEventListener('click', (event) => {
         console.log('click')
@@ -231,5 +261,9 @@ customElements.define('desktop-main',
         }
       })
       return highest
+    }
+
+    Zindex() {
+
     }
   })

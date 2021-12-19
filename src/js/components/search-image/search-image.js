@@ -1,6 +1,10 @@
 const template = document.createElement('template')
 template.innerHTML = `
 <style>
+ * {
+  margin: 0;
+  padding: 0;
+ }
   .container {
       display: flex;
       flex-wrap: wrap;
@@ -13,8 +17,9 @@ template.innerHTML = `
       max-height: 900px;
       order: 3;
       flex-grow: 4;
-      background: yellow;
-      flex: 33.33%;
+      background: white;
+      border: 0.5 solid #222222;
+      flex: 25%;
   }
   
   .input {
@@ -23,13 +28,19 @@ template.innerHTML = `
   }
 
   header {
-      margin-top: 50px;
+    background: white;
+      margin-top: 10px;
   }
 
   img {
     padding: 10px;
     max-height: 20vh;
     max-width: 20vw;
+  }
+
+  h1 {
+    margin: 0px;
+    padding: 0px;
   }
 
 </style>
@@ -68,7 +79,7 @@ customElements.define('search-image',
     }
 
     async getImages() {
-      const url = 'https://api.unsplash.com/search/photos/?query=' + this.input.value + '&orientation=landscape&per_page=9'
+      const url = 'https://api.unsplash.com/search/photos/?query=' + this.input.value + '&orientation=landscape'
       const fetchedUrl = await fetch(url, {
         headers: {
           Authorization: 'Client-ID iczfs_vxPOCtlCw-rifNqkkcu5hxrangGv7GVR3br3s'
@@ -77,13 +88,14 @@ customElements.define('search-image',
       const response = await fetchedUrl.json()
       console.log(response)
       const images = response.results
-      const imagesArray = images.slice(0, 9)
+      const imagesArray = images.slice(0, 6)
       const imagesContainer = []
       this.grid.innerHTML = ''
       for (let i = 0; i < images.length; i++) {
         imagesContainer[i] = document.createElement('div')
         imagesContainer[i] = document.createElement('img')
         imagesContainer[i].src = imagesArray[i].urls.small
+        console.log(imagesArray[i].urls.small)
         imagesContainer[i].addEventListener('click', (event) => {
           console.log('här')
           console.log(imagesArray[i].links)

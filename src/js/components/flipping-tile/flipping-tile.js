@@ -32,7 +32,7 @@ template.innerHTML = `
 
     #back {
       border-radius: 18%;
-      background: #D8D8D8;
+      background: #DADADA;
       display: flex;
       align-items: center;
       justify-content: center;
