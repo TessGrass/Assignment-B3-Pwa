@@ -60,10 +60,6 @@ template.innerHTML = `
     background: none;
     }
 
-    button:focus {
-      background: #ff0000;
-    }
-
     .noclick {
       pointer-events: none;
     }
@@ -71,7 +67,7 @@ template.innerHTML = `
 </style>
 <div part="flipping" id="container">
     <button type="button" class="noclick" id="front"><slot name="front" id="frontcard"></slot></button>
-    <button type="button" id="back"><img src="images/0.png"></button>
+    <button type="button" id="back"><img src="js/components/flipping-tile/lib/0.png"></button>
 </div>
 `
 customElements.define('flipping-tile',
@@ -92,11 +88,10 @@ customElements.define('flipping-tile',
       this.frontCard = this.shadowRoot.querySelector('#frontcard')
       this.backCard = this.shadowRoot.querySelector('#back')
       this.flipCard = this.shadowRoot.querySelector('.flipCard')
-      this.activeCard = false
       this.frontCard.classList.add('inactive')
+      this.activeCard = false
 
       this.addEventListener('click', (event) => {
-        console.log('i clicket')
         this.container.classList.toggle('flipCard')
         this.frontCard.classList.toggle('inactive')
         this.backCard.classList.toggle('inactive')

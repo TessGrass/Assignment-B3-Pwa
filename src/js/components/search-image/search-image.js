@@ -4,7 +4,9 @@ template.innerHTML = `
  * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
  }
+
   .container {
       display: flex;
       flex-wrap: wrap;
@@ -12,43 +14,76 @@ template.innerHTML = `
     max-height: 900px;
   }
 
-  .grid {
+  .grid {   
+    display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+      align-items: stretch; 
       width: 600px;
-      max-height: 900px;
-      order: 3;
-      flex-grow: 4;
-      background: white;
+      max-height: 600px;
+      background: #F5F5F5;
       border: 0.5 solid #222222;
-      flex: 25%;
   }
-  
-  .input {
-      margin-top: 50px;
-      z-index: 500;
+
+  input {
+      background: white;
+      vertical-align: middle;
+      padding-left: 10px;
+      min-width: 50%;
+        height: 34px;
+      border-radius: 5px 0 0 5px;
+      border: 2px solid #222222;
+      z-index: 10;
+  }
+
+  button {
+    margin: -5px;
+    width: 34px;
+    height: 34px;
+    border: none;
+    background-image: url('js/components/search-image/lib/searchwhite.svg');
+    background-size: cover;
+    cursor: pointer;
+    vertical-align: middle;
   }
 
   header {
     background: white;
-      margin-top: 10px;
+    margin-top: 15px;
+    margin-left: 15px;
+    margin-bottom: 25px;
   }
 
   img {
-    padding: 10px;
-    max-height: 20vh;
-    max-width: 20vw;
+    flex-grow: 1;
+    padding: 5px;
+    max-height: 14vh;
+    max-width: 10vw;
+    cursor: pointer;
+    flex-basis: 18%
+  }
+
+  img:hover {
+    margin: 0px;
+    border: 1px solid red;
+    
   }
 
   h1 {
+    font-family: helvetica;
+    font-size: 22px;
     margin: 0px;
     padding: 0px;
   }
 
 </style>
 <header>
-    <h1>IMAGE SEARCH</h1>
+    <h1>IMAGE FINDER</h1>
     <form>
-        <input type="text" value="" placeholder="Search..."><button>Search</button>
+        <input type="text" value="" placeholder="What image are you looking for?">
+        <button></button>
   </form>
+
 </header>
 <div class="container">
     <div class="grid">
@@ -71,9 +106,9 @@ customElements.define('search-image',
       this.grid = this.shadowRoot.querySelector('.grid')
       this.input = this.shadowRoot.querySelector('input')
       this.searchButton = this.shadowRoot.querySelector('button')
+
       this.searchButton.addEventListener('click', (event) => {
         event.preventDefault()
-        console.log(this.input.value)
         this.getImages()
       })
     }
@@ -88,17 +123,15 @@ customElements.define('search-image',
       const response = await fetchedUrl.json()
       console.log(response)
       const images = response.results
-      const imagesArray = images.slice(0, 6)
+      const imagesArray = images.slice(0, 9)
       const imagesContainer = []
       this.grid.innerHTML = ''
       for (let i = 0; i < images.length; i++) {
         imagesContainer[i] = document.createElement('div')
         imagesContainer[i] = document.createElement('img')
         imagesContainer[i].src = imagesArray[i].urls.small
-        console.log(imagesArray[i].urls.small)
+        imagesContainer[i].setAttribute('title', 'Proceed to Unsplash.com')
         imagesContainer[i].addEventListener('click', (event) => {
-          console.log('här')
-          console.log(imagesArray[i].links)
           window.open(imagesArray[i].links.html, '_blank')
         })
         this.grid.appendChild(imagesContainer[i])

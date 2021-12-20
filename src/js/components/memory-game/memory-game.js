@@ -24,6 +24,7 @@ template.innerHTML = `
   }  
 
   input {
+    margin-left: 10px;
     justify-content: center;
     width: 70px;
     height: 70px;
@@ -57,7 +58,7 @@ template.innerHTML = `
     width: 30px;
     border: none;
     background-size: contain;
-    background: url('./images/volumebuttonon.svg')
+    background: url('js/components/memory-game/lib/volumebuttonon.svg')
 }
 
   .volumeoff {
@@ -67,13 +68,13 @@ template.innerHTML = `
     border: none;
     background-color: white;
     background-size: cover;
-    background-image: url('./images/volumebuttonoff.svg')
-    }
+    background-image: url('js/components/memory-game/lib/volumebuttonoff.svg')
+  }
     
     #volume {
     display: flex;
     justify-content: center;
-    }
+  }
 
     #buttonwrapper {
     min-width: 300px;
@@ -81,15 +82,14 @@ template.innerHTML = `
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0;
-    }
+  }
 
     #restart {
-      margin-top: 5px;
-      display: flex;
-      justify-content: center;
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
     align-content: center;
-    }
+  }
 
 </style>
 
@@ -151,31 +151,31 @@ customElements.define('memory-game',
       },
       {
         name: 'controller',
-        img: 'images/controller.png'
+        img: 'js/components/memory-game/lib/controller.png'
       },
       {
         name: 'cpu2',
-        img: 'images/cpu2.png'
+        img: 'js/components/memory-game/lib/cpu2.png'
       },
       {
         name: 'joystick',
-        img: 'images/joystick.png'
+        img: 'js/components/memory-game/lib/joystick.png'
       },
       {
         name: 'keyboard',
-        img: 'images/keyboard.png'
+        img: 'js/components/memory-game/lib/keyboard.png'
       },
       {
         name: 'wheel',
-        img: 'images/wheel.png'
+        img: 'js/components/memory-game/lib/wheel.png'
       },
       {
         name: 'cd',
-        img: 'images/cd.png'
+        img: 'js/components/memory-game/lib/cd.png'
       },
       {
         name: 'console',
-        img: 'images/console.png'
+        img: 'js/components/memory-game/lib/console.png'
       }
       ]
 
@@ -291,13 +291,9 @@ customElements.define('memory-game',
       this.activeTiles = []
       this.matchedCards = []
       this.totalTries = 0
-      console.log('här')
       this.buttonTryAgain.classList.toggle('inactive')
-      // this.memoryWrapper.classList.toggle('inactive')
       this.memoryWrapper.innerHTML = ''
       this.memoryWrapper.style.display = 'none'
-      console.log(this.memoryWrapper)
       this.buttonWrapper.style.display = 'flex'
-      // this.memoryWrapper.appendChild(this.buttonWrapper)
     }
   })
