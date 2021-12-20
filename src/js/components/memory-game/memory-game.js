@@ -139,7 +139,8 @@ customElements.define('memory-game',
       this.buttonVolume.classList.add('inactive')
       this.flipUnmatchedCards = this.flipUnmatchedCards.bind(this) // annars hittar vi inte t.ex. this.memorywrapper i funktionen.
       this.hideMatchedCards = this.hideMatchedCards.bind(this)
-      this.matchSound = new Audio('images/gamenotis.wav')
+      this.matchSound = new Audio('js/components/memory-game/lib/gamenotis.wav')
+      this.gameOverSound = new Audio('js/components/memory-game/lib/applause.wav')
       this.matchSound.muted = false
 
       this.totalTries = 0
@@ -263,6 +264,8 @@ customElements.define('memory-game',
           setTimeout(this.flipUnmatchedCards, 1000)
         }
         if (this.matchedCards.length === this.sizeOfBoard) {
+          this.matchSound.remove()
+          this.gameOverSound.play()
           this.buttonTryAgain.classList.toggle('inactive')
         }
         this.activeTiles = []
@@ -270,7 +273,7 @@ customElements.define('memory-game',
         this.h1Text.textContent = `Total tries: ${this.totalTries}`
       }
     }
-    
+
     hideMatchedCards () {
       this.memoryWrapper.style.pointerEvents = 'auto'
       this.dispatchEvent(new CustomEvent('hidematchedcards', {

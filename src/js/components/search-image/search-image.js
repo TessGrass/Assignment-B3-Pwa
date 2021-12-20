@@ -126,7 +126,7 @@ customElements.define('search-image',
       const imagesArray = images.slice(0, 9)
       const imagesContainer = []
       this.grid.innerHTML = ''
-      for (let i = 0; i < images.length; i++) {
+      for (let i = 0; i < imagesArray.length; i++) {
         imagesContainer[i] = document.createElement('div')
         imagesContainer[i] = document.createElement('img')
         imagesContainer[i].src = imagesArray[i].urls.small

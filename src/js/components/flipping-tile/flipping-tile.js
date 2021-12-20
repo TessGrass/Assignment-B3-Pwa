@@ -40,6 +40,7 @@ template.innerHTML = `
       max-height: 120px;
     }
 
+
     #front {
       border-radius: 20%;
       justify-content: center;
