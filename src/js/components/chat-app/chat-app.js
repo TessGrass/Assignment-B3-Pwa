@@ -20,16 +20,16 @@ template.innerHTML = `
     margin-top: 25px;
     width: 400px;
     height: 365px;
-    background: white;
+    background:green;
 }
 
-.chatinput {
+.chattextarea {
     background: black;
     position: absolute;
     margin-bottom: 12px;
     margin-left: 5px;
     bottom: 0px;
-    background: white;
+    background: yellow;
     max-width: 310px;
     height: 38px;
     border: 1px solid #222222;
@@ -73,36 +73,54 @@ template.innerHTML = `
     overflow: visible;
     }
 
-    .giphysearchwindow {
-        right: 0;
-        width: 250px;
+    .giphywindow {
+        margin-left: 35px;
+        margin-right: 1px;
+        margin-top: 10px;
+        display: flex;
+      flex-wrap: wrap;
+      flex-direction: row; 
+        width: 270px;
     height: 250px;
     border: 2px solid red;
-    z-index: 50;
     }
 
-    .gifsearchfield {
+    input {
         padding-left: 2px;
         padding-right: 20px;
+        height: 25px;
     }
 
+    img {
+    flex-grow: 1;
+    padding: 5px;
+    max-height: 8vh;
+    max-width: 28vw;
+    cursor: pointer;
+    flex-basis: 28%
+  }
 
-
+  .inactive {
+      display: none;
+  }
 
 </style>
 
   <div class="chatwrapper">
       <div class="inputbackground">
          <form>
-          <textarea class="chatinput" name="message" rows="4" cols="50"></textarea>
+          <textarea class="chattextarea" name="message" rows="4" cols="50"></textarea>
           <button class="giphy"></button>
           <button class="paperplane"></button>
           </form>
       </div>
     <div class="chatwindow">
-    <div class="giphysearchwindow"><input class="gifsearchfield" type="text" value="" placeholder="What gif are you looking for?"></div>
+        <p></p>
+        <div class="giphywindow inactive">
+                 <input type="text" value="" placeholder="What gif are you looking for?"></input>
+        </div>
+    </div>
 </div>
-  </div>
 `
 customElements.define('chat-app',
   /**
@@ -117,10 +135,23 @@ customElements.define('chat-app',
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
-        this.sendMessageButton = this.shadowRoot.querySelector('.paperplane')
-        this.showGifWindowButton = this.shadowRoot.querySelector('.giphy')
-        this.gifSearchField = this.shadowRoot.querySelector('.gifsearchfield')
-        this.chatInputField = this.shadowRoot.querySelector('.chatinput')
+      this.sendMessageButton = this.shadowRoot.querySelector('.paperplane')
+      this.showGifWindowButton = this.shadowRoot.querySelector('.giphy')
+      this.gifSearchField = this.shadowRoot.querySelector('input')
+      this.chatTextArea = this.shadowRoot.querySelector('.chattextarea')
+      this.gifWindow = this.shadowRoot.querySelector('.giphywindow')
+      this.chatWindow = this.shadowRoot.querySelector('.chatwindow')
+      this.chatwrapper = this.shadowRoot.querySelector('.chatwrapper')
+      this.pText = this.shadowRoot.querySelector('p')
+      this.socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
+
+      this.fetchData = {
+        type: 'message',
+        data: 'The message text is sent using the data property',
+        username: 'TessG',
+        channel: 'my, not so secret, channel2',
+        key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+      }
 
       this.sendMessageButton.addEventListener('click', (event) => {
         event.preventDefault()
@@ -130,31 +161,58 @@ customElements.define('chat-app',
       this.showGifWindowButton = this.shadowRoot.querySelector('.giphy')
         .addEventListener('click', (event) => {
           event.preventDefault()
+          this.gifWindow.classList.toggle('inactive')
+
           console.log('knapp')
         })
 
       this.gifSearchField.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
           event.preventDefault()
-          console.log('gifsearchField')
+          this.getImages()
         }
       })
 
-      this.chatInputField.addEventListener('keypress', (event) => {
+      this.chatTextArea.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
+            console.log(this.chatTextArea.value)
+            const dataMessage = this.chatTextArea.value
+            console.log(dataMessage)
+            this.fetchData.data = dataMessage
+            this.socket.send(JSON.stringify(this.fetchData))
+            this.pText.textContent = dataMessage
           event.preventDefault()
-          console.log('chatinputfield')
         }
       })
     }
 
-    async getImages() {
-        const url = 'api.giphy.com/v1/gifs/search?q=' + this.input.value + '&rating=g&api_key=yQC3qMgBqPWBQDkjDQo7KkJqvY1GiFoH'
-        const fetchedUrl = await fetch(url, {
-          headers: {
-            Authorization: 'Client-ID iczfs_vxPOCtlCw-rifNqkkcu5hxrangGv7GVR3br3s'
-          }
-        })
-        const response = await fetchedUrl.json()
+        async getImages() {
+      const url = 'https://api.giphy.com/v1/gifs/search?q=' + this.gifSearchField.value + '&rating=g&limit=6&api_key=yQC3qMgBqPWBQDkjDQo7KkJqvY1GiFoH'
+      const fetchedUrl = await fetch(url)
+      const response = await fetchedUrl.json()
+      console.log(response.data[0].images)
+      const imagesArray = response.data
+      const imagesContainer = []
+      this.gifWindow.innerHTML = ''
+      for (let i = 0; i < imagesArray.length; i++) {
+        imagesContainer[i] = document.createElement('div')
+        imagesContainer[i] = document.createElement('img')
+        imagesContainer[i].setAttribute('src', imagesArray[i].images.original.url)
+        console.log(imagesContainer[i])
+        /* imagesContainer[i].addEventListener('click', (event) => {
+          window.open(imagesContainer[i].links.html, '_blank')
+        }) */
+        this.gifWindow.appendChild(imagesContainer[i])
       }
+    }
+    /* async getImages() {
+      const url = 'api.giphy.com/v1/gifs/search?q=' + this.gifSearchField.value + '&rating=g&'
+      const fetchedUrl = await fetch(url, {
+        headers: {
+          Authorization: 'api_key=yQC3qMgBqPWBQDkjDQo7KkJqvY1GiFoH'
+        }
+      })
+      const response = await fetchedUrl.json()
+      console.log(response)
+    } */
   })

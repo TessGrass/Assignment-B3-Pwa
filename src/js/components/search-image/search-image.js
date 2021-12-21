@@ -8,8 +8,8 @@ template.innerHTML = `
  }
 
   .container {
-      display: flex;
-      flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
     max-width: 900px;
     max-height: 900px;
   }
@@ -65,8 +65,7 @@ template.innerHTML = `
 
   img:hover {
     margin: 0px;
-    border: 1px solid red;
-    
+    border: 1px solid red;    
   }
 
   h1 {
