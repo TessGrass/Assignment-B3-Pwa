@@ -20,9 +20,10 @@ template.innerHTML = `
     margin-right: 10px;
     margin-top: 5px;
     width: 400px;
-    height: 565px;
+    height: 525px;
     background:white;
     word-wrap: break-word;
+    overflow-y: auto;
 }
 
 .chattextarea {
@@ -106,8 +107,23 @@ template.innerHTML = `
       display: none;
   }
 
-  .sendchat {
+  .recievechat {
     background-color: green;
+    padding: 10px;
+    margin-top: 10px;
+    max-width: 40%;
+    max-height: 100%;
+    border-radius: 0px 5px 5px 0px;
+  }
+
+  .sendchat {
+    background-color: aqua;
+    padding: 10px;
+    margin-top: 10px;
+    margin-left: 200px;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 5px 0px 0px 5px;
   }
 
 </style>
@@ -177,8 +193,11 @@ customElements.define('chat-app',
       this.chatTextArea.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
           const dataMessage = this.chatTextArea.value
+          /* this.pSendText = document.createElement('p')
+        this.pSendText.classList.add('sendchat')
+        this.pSendText.append(dataMessage)
+        this.chatWindow.appendChild(this.pSendText) */
           this.fetchData.data = dataMessage
-          // console.log(this.fetchData)
           this.socket.send(JSON.stringify(this.fetchData))
           this.chatTextArea.value = ''
           event.preventDefault()
@@ -186,22 +205,44 @@ customElements.define('chat-app',
       })
 
       this.socket.onmessage = (event) => {
-        console.log('onmessage')
+        // console.log(event)
         this.checkNewMessage(event)
       }
     }
 
     checkNewMessage(event) {
+      this.pRecieveText = document.createElement('p')
       const data = JSON.parse(event.data)
       console.log(data.data)
       if (data.data) {
-        console.log('checkNewMessage')
-        this.pText = document.createElement('p')
-        this.pText.classList.add('sendchat')
-        console.log(this.pText)
-        this.pText.append(data.data)
-        this.chatWindow.appendChild(this.pText)
+       const check = this.validURL(data.data)
+        if (check === true) {
+          this.gifImg = document.createElement('img')
+          this.gifImg.src = data.data
+          console.log(this.gifImg.src)
+          this.pRecieveText.append(this.gifImg)
+        } else {
+          this.pRecieveText.classList.add('recievechat')
+          this.pRecieveText.append(data.username + ':' + data.data)
+        }
+        this.chatWindow.appendChild(this.pRecieveText)
       }
+    }
+    
+    /**
+     * 
+     * @param {*} str 
+     * @returns 
+     */
+    validURL(str) {
+      const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+        '(\\#[-a-z\\d_]*)?$','i') // fragment locator
+        this.check = !!pattern.test(str)
+      return !!pattern.test(str)
     }
 
         async getImages() {
@@ -216,21 +257,16 @@ customElements.define('chat-app',
         imagesContainer[i] = document.createElement('div')
         imagesContainer[i] = document.createElement('img')
         imagesContainer[i].setAttribute('src', imagesArray[i].images.original.url)
-        console.log(imagesContainer[i])
-        /* imagesContainer[i].addEventListener('click', (event) => {
-          window.open(imagesContainer[i].links.html, '_blank')
-        }) */
+        console.log(imagesContainer[i].src)
+        imagesContainer[i].addEventListener('click', (event) => {
+          this.fetchData.data = imagesContainer[i].src
+          console.log(this.fetchData.data)
+          this.socket.send(JSON.stringify(this.fetchData))
+        
+          // this.socket.send(JSON.stringify(imagesContainer[i].src))
+          // window.open(imagesContainer[i].url, '_blank')
+        })
         this.gifWindow.appendChild(imagesContainer[i])
       }
     }
-    /* async getImages() {
-      const url = 'api.giphy.com/v1/gifs/search?q=' + this.gifSearchField.value + '&rating=g&'
-      const fetchedUrl = await fetch(url, {
-        headers: {
-          Authorization: 'api_key=yQC3qMgBqPWBQDkjDQo7KkJqvY1GiFoH'
-        }
-      })
-      const response = await fetchedUrl.json()
-      console.log(response)
-    } */
   })
