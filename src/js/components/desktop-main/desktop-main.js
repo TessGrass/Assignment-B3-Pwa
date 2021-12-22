@@ -26,7 +26,7 @@ template.innerHTML = `
 .alternatenavbar {
   display: flex;
   justify-content: center;
-  position:absolute;
+  position: absolute;
   bottom: 0;
   width: 1000px;
   height: 45px;
@@ -60,25 +60,49 @@ template.innerHTML = `
   position:absolute;
   bottom: 0;
   width: 1000px;
-  height: 45px;
+  height: 50px;
   background-color: rgba(200,200,200,0.8);
   border-radius: 15px 15px 0px 0px;
 }
 
-.navbar .app {  
+.navbar .app {
   transition:all .2s ease;
-  margin: 8px 5px 25px 20px;
-  width: 30px;
-  height: 30px;
+  margin: 5px 5px 15px 15px;
+  width: 35px;
+  height: 35px;
   background-color: #222222;
   border-radius: 25%;
   border: none;
 }
 
+#memory {
+  background-image: url('js/components/desktop-main/lib/0.png');
+    background-size: 37px 40px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #92C7A3;
+}
+
+#chat {
+  background-image: url('js/components/desktop-main/lib/message.svg');
+    background-size: 23px 23px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #92C7A3;
+}
+
+#search-images {
+  background-image: url('js/components/desktop-main/lib/searchapp.svg');
+    background-size: 23px 23px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #92C7A3;
+}
+
 .app:hover {
   background-color: #92C7A3;
-  width: 35px;
-  height: 35px;
+  width: 38px;
+  height: 38px;
 }
 
 .switch {
@@ -153,9 +177,9 @@ input:checked + .slider:before {
 <div class="navbar">
   <form>
 <button type="button" id="memory" class="app"></button>
-<button type="button" id ="chat "class="app"></button>
+<button type="button" id ="chat" class="app"></button>
 <button type="button" id="search-images" class="app"></button>
-<button type="button" class="app"></button>
+<button type="button" id="test" class="app"></button>
 </form>
 </div>
 </div>
@@ -174,8 +198,10 @@ customElements.define('desktop-main',
 
       this.attachShadow({ mode: 'open' })
         .appendChild(template.content.cloneNode(true))
-      this.buttonMemory = this.shadowRoot.querySelector('#memory')
-      this.buttonSearchImages = this.shadowRoot.querySelector('#search-images')
+      this.memoryButton = this.shadowRoot.querySelector('#memory')
+      this.searchImagesButton = this.shadowRoot.querySelector('#search-images')
+      this.chatButton = this.shadowRoot.querySelector('#chat')
+      this.testButton = this.shadowRoot.querySelector('#test')
       this.apps = this.shadowRoot.querySelectorAll('.app')
       this.mainWrapper = this.shadowRoot.querySelector('.mainwrapper')
       this.mainWindow = this.shadowRoot.querySelector('.window')
@@ -184,7 +210,7 @@ customElements.define('desktop-main',
       this.form = this.shadowRoot.querySelector('form')
       this.value = 1
 
-      this.buttonMemory.addEventListener('click', (event) => {
+      this.memoryButton.addEventListener('click', (event) => {
         event.stopPropagation()
         const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
         this.memoryGame = document.createElement('memory-game')
@@ -206,7 +232,7 @@ customElements.define('desktop-main',
         })
       })
 
-      this.buttonSearchImages.addEventListener('click', (event) => {
+      this.searchImagesButton.addEventListener('click', (event) => {
         event.stopPropagation()
         const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
         this.searchImage = document.createElement('search-image')
@@ -216,6 +242,29 @@ customElements.define('desktop-main',
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
         desktopWindow.divContent.appendChild(this.searchImage)
+        this.mainWindow.appendChild(desktopWindow)
+        desktopWindow.setZindexTo(this.getHighestZindex())
+
+        desktopWindow.addEventListener('closewindow', (event) => {
+          desktopWindow.remove() // tas bort från domen
+        })
+
+        desktopWindow.addEventListener('mousedown', (event) => {
+          Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // hämtar alla desktop-window vi har appendat från domen.
+            window === event.target && window.setZindexTo(this.getHighestZindex() + 1)
+          })
+        })
+      })
+
+      this.chatButton.addEventListener('click', (event) => {
+        event.stopPropagation()
+        const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
+        this.chatApp = document.createElement('chat-app')
+        desktopWindow.divContent.style.minHeight = '500px'
+        desktopWindow.id = this.value++
+        desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
+        desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
+        desktopWindow.divContent.appendChild(this.chatApp)
         this.mainWindow.appendChild(desktopWindow)
         desktopWindow.setZindexTo(this.getHighestZindex())
 

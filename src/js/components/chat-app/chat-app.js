@@ -7,31 +7,33 @@ template.innerHTML = `
 }
     
 .chatwrapper {
-    display: flex;
+   display: flex;
     justify-content: center;
     position: relative;
-    border: 2px solid black;
     background: #222222;
     width: 400px;
-    height: 400px;
+    height: 600px;
 }
 
 .chatwindow {
-    margin-top: 25px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 5px;
     width: 400px;
-    height: 365px;
-    background:green;
+    height: 565px;
+    background:white;
+    word-wrap: break-word;
 }
 
 .chattextarea {
     background: black;
     position: absolute;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     margin-left: 5px;
     bottom: 0px;
-    background: yellow;
+    background: white;
     max-width: 310px;
-    height: 38px;
+    height: 45px;
     border: 1px solid #222222;
 }
 
@@ -57,7 +59,7 @@ template.innerHTML = `
     cursor: pointer;      
 }
     .giphy {
-        right: 0;
+    right: 0;
     margin-bottom: 19px;
     margin-right: 45px;
     position: absolute;
@@ -71,25 +73,25 @@ template.innerHTML = `
     background-position: center;
     background-color: transparent;
     overflow: visible;
-    }
+}
 
     .giphywindow {
-        margin-left: 35px;
-        margin-right: 1px;
-        margin-top: 10px;
-        display: flex;
-      flex-wrap: wrap;
-      flex-direction: row; 
-        width: 270px;
+    margin-left: 35px;
+    margin-right: 1px;
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row; 
+    width: 270px;
     height: 250px;
     border: 2px solid red;
-    }
+}
 
     input {
-        padding-left: 2px;
-        padding-right: 20px;
-        height: 25px;
-    }
+    padding-left: 2px;
+    padding-right: 20px;
+    height: 25px;
+}
 
     img {
     flex-grow: 1;
@@ -104,6 +106,10 @@ template.innerHTML = `
       display: none;
   }
 
+  .sendchat {
+    background-color: green;
+  }
+
 </style>
 
   <div class="chatwrapper">
@@ -115,7 +121,6 @@ template.innerHTML = `
           </form>
       </div>
     <div class="chatwindow">
-        <p></p>
         <div class="giphywindow inactive">
                  <input type="text" value="" placeholder="What gif are you looking for?"></input>
         </div>
@@ -142,28 +147,24 @@ customElements.define('chat-app',
       this.gifWindow = this.shadowRoot.querySelector('.giphywindow')
       this.chatWindow = this.shadowRoot.querySelector('.chatwindow')
       this.chatwrapper = this.shadowRoot.querySelector('.chatwrapper')
-      this.pText = this.shadowRoot.querySelector('p')
       this.socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
 
       this.fetchData = {
         type: 'message',
         data: 'The message text is sent using the data property',
         username: 'TessG',
-        channel: 'my, not so secret, channel2',
+        channel: 'my, not so secret, channel',
         key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
       }
 
       this.sendMessageButton.addEventListener('click', (event) => {
         event.preventDefault()
-        console.log('knapp')
       })
 
       this.showGifWindowButton = this.shadowRoot.querySelector('.giphy')
         .addEventListener('click', (event) => {
           event.preventDefault()
           this.gifWindow.classList.toggle('inactive')
-
-          console.log('knapp')
         })
 
       this.gifSearchField.addEventListener('keypress', (event) => {
@@ -175,15 +176,32 @@ customElements.define('chat-app',
 
       this.chatTextArea.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
-            console.log(this.chatTextArea.value)
-            const dataMessage = this.chatTextArea.value
-            console.log(dataMessage)
-            this.fetchData.data = dataMessage
-            this.socket.send(JSON.stringify(this.fetchData))
-            this.pText.textContent = dataMessage
+          const dataMessage = this.chatTextArea.value
+          this.fetchData.data = dataMessage
+          // console.log(this.fetchData)
+          this.socket.send(JSON.stringify(this.fetchData))
+          this.chatTextArea.value = ''
           event.preventDefault()
         }
       })
+
+      this.socket.onmessage = (event) => {
+        console.log('onmessage')
+        this.checkNewMessage(event)
+      }
+    }
+
+    checkNewMessage(event) {
+      const data = JSON.parse(event.data)
+      console.log(data.data)
+      if (data.data) {
+        console.log('checkNewMessage')
+        this.pText = document.createElement('p')
+        this.pText.classList.add('sendchat')
+        console.log(this.pText)
+        this.pText.append(data.data)
+        this.chatWindow.appendChild(this.pText)
+      }
     }
 
         async getImages() {
