@@ -220,7 +220,10 @@ customElements.define('memory-game',
       this.matchedCards = []
     }
 
-    createTiles() {
+    /**
+     * Create tiles for the game.
+     */
+    createTiles () {
       const tiles = []
       this.buttonWrapper.style.display = 'none'
       this.buttonVolume.style.display = 'flex'
@@ -252,7 +255,12 @@ customElements.define('memory-game',
       })
     }
 
-    handleTiles(data) {
+    /**
+     * Compares two flipped cards.
+     *
+     * @param {object} data - receives data from createTiles method.
+     */
+    handleTiles (data) {
       this.activeTiles.push(data.detail)
       if (this.activeTiles.length === 2) {
         this.memoryWrapper.style.pointerEvents = 'none'
@@ -274,6 +282,9 @@ customElements.define('memory-game',
       }
     }
 
+    /**
+     *
+     */
     hideMatchedCards () {
       this.memoryWrapper.style.pointerEvents = 'auto'
       this.dispatchEvent(new CustomEvent('hidematchedcards', {
@@ -282,6 +293,9 @@ customElements.define('memory-game',
       }))
     }
 
+    /**
+     *
+     */
     flipUnmatchedCards () {
       this.memoryWrapper.style.pointerEvents = 'auto'
       this.dispatchEvent(new CustomEvent('flipunmatchedcards', {
@@ -290,7 +304,10 @@ customElements.define('memory-game',
       }))
     }
 
-    restartGame() {
+    /**
+     *
+     */
+    restartGame () {
       this.activeTiles = []
       this.matchedCards = []
       this.totalTries = 0

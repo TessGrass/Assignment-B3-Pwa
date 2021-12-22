@@ -112,7 +112,10 @@ customElements.define('search-image',
       })
     }
 
-    async getImages() {
+    /**
+     *
+     */
+    async getImages () {
       const url = 'https://api.unsplash.com/search/photos/?query=' + this.input.value + '&orientation=landscape'
       const fetchedUrl = await fetch(url, {
         headers: {

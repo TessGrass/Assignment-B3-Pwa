@@ -236,7 +236,7 @@ customElements.define('desktop-main',
         event.stopPropagation()
         const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
         this.searchImage = document.createElement('search-image')
-        
+
         desktopWindow.divContent.style.minHeight = '500px'
         desktopWindow.id = this.value++
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
@@ -260,7 +260,6 @@ customElements.define('desktop-main',
         event.stopPropagation()
         const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
         this.chatApp = document.createElement('chat-app')
-        desktopWindow.divContent.style.minHeight = '500px'
         desktopWindow.id = this.value++
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
@@ -278,8 +277,6 @@ customElements.define('desktop-main',
           })
         })
       })
-
-
 
       this.slider.addEventListener('click', (event) => {
         console.log('click')
@@ -302,6 +299,9 @@ customElements.define('desktop-main',
       })
     }
 
+    /**
+     *
+     */
     getHighestZindex () {
       let highest = 0
       Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // hämtar alla desktop-window vi har appendat från domen.
@@ -312,7 +312,10 @@ customElements.define('desktop-main',
       return highest
     }
 
-    Zindex() {
+    /**
+     *
+     */
+    Zindex () {
 
     }
   })

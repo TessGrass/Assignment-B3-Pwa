@@ -16,6 +16,7 @@ template.innerHTML = `
 }
 
 .chatwindow {
+  display:block;
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 5px;
@@ -23,14 +24,14 @@ template.innerHTML = `
     height: 525px;
     background:white;
     word-wrap: break-word;
-    overflow-y: auto;
+    overflow-y: auto;  
 }
 
 .chattextarea {
     background: black;
     position: absolute;
     margin-bottom: 8px;
-    margin-left: 5px;
+    margin-left: 8px;
     bottom: 0px;
     background: white;
     max-width: 310px;
@@ -77,20 +78,23 @@ template.innerHTML = `
 }
 
     .giphywindow {
-    margin-left: 35px;
-    margin-right: 1px;
-    margin-top: 10px;
     display: flex;
     flex-wrap: wrap;
     flex-direction: row; 
+    border-radius: 10px;
+    margin: 10px 0px 5px 95px;
     width: 270px;
     height: 250px;
-    border: 2px solid red;
+    border: 1px solid black;
+    background: #C8C8C8;
+    top: 100vh;
 }
 
     input {
-    padding-left: 2px;
-    padding-right: 20px;
+    margin-top: 5px;
+    margin-left: 5px;
+    border-radius: 5px;
+    padding-right: 15px;
     height: 25px;
 }
 
@@ -108,37 +112,90 @@ template.innerHTML = `
   }
 
   .recievechat {
-    background-color: green;
-    padding: 10px;
-    margin-top: 10px;
-    max-width: 40%;
+    background-color: #92C7A3;
+    padding: 5px;
+    margin-top: 8px;
+    min-width: 50%;
+    max-width: 55%;
     max-height: 100%;
+    margin-bottom: 5px;
+    margin-left: 0px;
     border-radius: 0px 5px 5px 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .sendchat {
-    background-color: aqua;
-    padding: 10px;
-    margin-top: 10px;
-    margin-left: 200px;
-    max-width: 100%;
+  .mychat {
+    float: right;
+    background-color: #C0D8D8;
+    padding: 5px;
+    margin-top: 8px;
+    min-width: 50%;
+    max-width: 55%;
     max-height: 100%;
+    margin-bottom: 5px;
     border-radius: 5px 0px 0px 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+
+  .timerecievechat {
+    float: right;
+    text-align: center;
+    margin-left: 120px;
+    width: 32px;
+    height: 12px;
+    background: #92C7A3;
+    font-size: 10px;
+    padding-top: 10px;
+  }
+  .timemychat {
+    text-align: center;
+    margin-left: 0px;
+    width: 32px;
+    height: 12px;
+    background: #C0D8D8;
+    font-size: 10px;
+  }
+
+  .usernamewrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column; 
+    align-items: center;
+    width: 250px;
+    height: 250px;
+    border: 2px solid red;
+  }
+
+  .usernamebutton {
+    width: 70px;
+    height: 45px;
+    margin-top: 10px;
+  }
+
+  .usernameinput {
+    text-align: center;
+  }
+
+
 
 </style>
-
-  <div class="chatwrapper">
+<div class="usernamewrapper">
+    <input type="text" class="usernameinput" value="" placeholder="Choose your nickname"></input>
+    <button class="usernamebutton">Start chatting</button>
+    </div>
+  <div class="chatwrapper inactive">
       <div class="inputbackground">
          <form>
-          <textarea class="chattextarea" name="message" rows="4" cols="50"></textarea>
+          <textarea class="chattextarea" name="message" rows="4" cols="50" maxlength="200"></textarea>
           <button class="giphy"></button>
           <button class="paperplane"></button>
           </form>
       </div>
     <div class="chatwindow">
         <div class="giphywindow inactive">
-                 <input type="text" value="" placeholder="What gif are you looking for?"></input>
+              <input type="text" value="" placeholder="Search your gif here"></input>
         </div>
     </div>
 </div>
@@ -162,18 +219,25 @@ customElements.define('chat-app',
       this.chatTextArea = this.shadowRoot.querySelector('.chattextarea')
       this.gifWindow = this.shadowRoot.querySelector('.giphywindow')
       this.chatWindow = this.shadowRoot.querySelector('.chatwindow')
-      this.chatwrapper = this.shadowRoot.querySelector('.chatwrapper')
+      this.chatWrapper = this.shadowRoot.querySelector('.chatwrapper')
+      this.pElement = this.shadowRoot.querySelector('.timestamp')
+      this.usernameWrapper = this.shadowRoot.querySelector('.usernamewrapper')
+      this.usernameinput = this.shadowRoot.querySelector('.usernameinput')
+      this.usernamebutton = this.shadowRoot.querySelector('.usernamebutton')
       this.socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
+      this.username = ''
+      
 
-      this.fetchData = {
-        type: 'message',
-        data: 'The message text is sent using the data property',
-        username: 'TessG',
-        channel: 'my, not so secret, channel',
-        key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
-      }
+      this.usernamebutton.addEventListener('click', (event) => {
+        this.username = this.usernameinput.value
+        this.usernameWrapper.style.display = 'none'
+        this.chatWrapper.classList.toggle('inactive')
+        this.fetchData()
+        event.preventDefault()
+      })
 
       this.sendMessageButton.addEventListener('click', (event) => {
+        this.sendMessage()
         event.preventDefault()
       })
 
@@ -192,66 +256,86 @@ customElements.define('chat-app',
 
       this.chatTextArea.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
-          const dataMessage = this.chatTextArea.value
-          /* this.pSendText = document.createElement('p')
-        this.pSendText.classList.add('sendchat')
-        this.pSendText.append(dataMessage)
-        this.chatWindow.appendChild(this.pSendText) */
-          this.fetchData.data = dataMessage
-          this.socket.send(JSON.stringify(this.fetchData))
-          this.chatTextArea.value = ''
-          event.preventDefault()
+          this.sendMessage()
         }
       })
 
-      this.socket.onmessage = (event) => {
-        // console.log(event)
+      /**
+       * @param event
+       */
+       this.socket.onmessage = (event) => {
         this.checkNewMessage(event)
       }
     }
 
-    checkNewMessage(event) {
-      this.pRecieveText = document.createElement('p')
-      const data = JSON.parse(event.data)
-      console.log(data.data)
-      if (data.data) {
-       const check = this.validURL(data.data)
-        if (check === true) {
-          this.gifImg = document.createElement('img')
-          this.gifImg.src = data.data
-          console.log(this.gifImg.src)
-          this.pRecieveText.append(this.gifImg)
-        } else {
-          this.pRecieveText.classList.add('recievechat')
-          this.pRecieveText.append(data.username + ':' + data.data)
-        }
-        this.chatWindow.appendChild(this.pRecieveText)
+    fetchData() {
+      this.fetchData = {
+        type: 'message',
+        data: 'The message text is sent using the data property',
+        username: this.username,
+        channel: 'my, not so secret, channel',
+        key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
       }
     }
-    
+
     /**
-     * 
-     * @param {*} str 
-     * @returns 
+     * @param event
      */
-    validURL(str) {
-      const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-        '(\\#[-a-z\\d_]*)?$','i') // fragment locator
-        this.check = !!pattern.test(str)
+    checkNewMessage (event) {
+      this.recieveText = document.createElement('div')
+      this.recieveText.style.width = '350px'
+      this.pTime = document.createElement('p')
+      const data = JSON.parse(event.data)
+      if (data.data) {
+        const check = this.validURL(data.data)
+        if (check) {
+          this.gifImg = document.createElement('img')
+          this.gifImg.src = data.data
+          this.recieveText.append(this.gifImg)
+        } else {
+          if (data.username === this.username) {
+            this.recieveText.classList.add('mychat')
+            this.pTime.classList.add('timemychat')
+          } else {
+            this.recieveText.classList.add('recievechat')
+            this.pTime.classList.add('timerecievechat')
+          }
+          const today = new Date()
+          this.recieveText.append(data.username + ':' + data.data)
+          this.pTime.textContent = today.getHours() + ':' + (today.getMinutes() < 10 ? '0' : '') + today.getMinutes()
+          this.recieveText.append(this.pTime)
+        }
+        this.chatWindow.appendChild(this.recieveText)
+      }
+    }
+
+    /**
+     * Checks for valid URL.
+     *
+     * @param {string} str - the parameter that is going to be checked.
+      * @returns - true or false.
+     */
+    validURL (str) {
+      const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$', 'i') // fragment locator
+      this.check = !!pattern.test(str)
       return !!pattern.test(str)
     }
 
-        async getImages() {
+    /**
+     * Implementing the gif API.
+     */
+    async getImages () {
+      const imagesContainer = []
       const url = 'https://api.giphy.com/v1/gifs/search?q=' + this.gifSearchField.value + '&rating=g&limit=6&api_key=yQC3qMgBqPWBQDkjDQo7KkJqvY1GiFoH'
       const fetchedUrl = await fetch(url)
       const response = await fetchedUrl.json()
       console.log(response.data[0].images)
       const imagesArray = response.data
-      const imagesContainer = []
       this.gifWindow.innerHTML = ''
       for (let i = 0; i < imagesArray.length; i++) {
         imagesContainer[i] = document.createElement('div')
@@ -262,11 +346,20 @@ customElements.define('chat-app',
           this.fetchData.data = imagesContainer[i].src
           console.log(this.fetchData.data)
           this.socket.send(JSON.stringify(this.fetchData))
-        
-          // this.socket.send(JSON.stringify(imagesContainer[i].src))
-          // window.open(imagesContainer[i].url, '_blank')
+          this.gifWindow.classList.toggle('inactive')
         })
         this.gifWindow.appendChild(imagesContainer[i])
       }
+    }
+
+    sendMessage() {
+      const dataMessage = this.chatTextArea.value
+          /* this.pSendText = document.createElement('p')
+        this.pSendText.classList.add('sendchat')
+        this.pSendText.append(dataMessage)
+        this.chatWindow.appendChild(this.pSendText) */
+          this.fetchData.data = dataMessage
+          this.socket.send(JSON.stringify(this.fetchData))
+          this.chatTextArea.value = ''
     }
   })

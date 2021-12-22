@@ -127,11 +127,17 @@ customElements.define('desktop-window',
       }
     }
 
-    setZindexTo(newZindex) {
+    /**
+     * @param newZindex
+     */
+    setZindexTo (newZindex) {
       this.shadowRoot.querySelector('#windowcontainer').style.zIndex = newZindex
     }
 
-    getZindex() {
+    /**
+     *
+     */
+    getZindex () {
       return this.shadowRoot.querySelector('#windowcontainer').style.zIndex
     }
     /* focus(setFocus) {
