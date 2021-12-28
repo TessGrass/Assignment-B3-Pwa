@@ -156,6 +156,7 @@ template.innerHTML = `
     height: 12px;
     background: #C0D8D8;
     font-size: 10px;
+    padding-top: 10px;
   }
 
   .usernamewrapper {
@@ -165,7 +166,6 @@ template.innerHTML = `
     align-items: center;
     width: 250px;
     height: 250px;
-    border: 2px solid red;
   }
 
   .usernamebutton {
@@ -195,7 +195,7 @@ template.innerHTML = `
       </div>
     <div class="chatwindow">
         <div class="giphywindow inactive">
-              <input type="text" value="" placeholder="Search your gif here"></input>
+              <input type="text" class="gifsearch" value="" placeholder="Search your gif here"></input>
         </div>
     </div>
 </div>
@@ -215,7 +215,7 @@ customElements.define('chat-app',
         .appendChild(template.content.cloneNode(true))
       this.sendMessageButton = this.shadowRoot.querySelector('.paperplane')
       this.showGifWindowButton = this.shadowRoot.querySelector('.giphy')
-      this.gifSearchField = this.shadowRoot.querySelector('input')
+      this.gifSearchField = this.shadowRoot.querySelector('.gifsearch')
       this.chatTextArea = this.shadowRoot.querySelector('.chattextarea')
       this.gifWindow = this.shadowRoot.querySelector('.giphywindow')
       this.chatWindow = this.shadowRoot.querySelector('.chatwindow')
@@ -225,13 +225,21 @@ customElements.define('chat-app',
       this.usernameinput = this.shadowRoot.querySelector('.usernameinput')
       this.usernamebutton = this.shadowRoot.querySelector('.usernamebutton')
       this.socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
-      this.username = ''
+      this.usernameinput.value = localStorage.getItem('chat_username')
       
-
+      
       this.usernamebutton.addEventListener('click', (event) => {
+        if (localStorage.getItem === 'chat_username') {
+          console.log('hej')
+        this.username = localStorage.getItem('chat_username')
+        this.usernameWrapper.style.display = 'none'
+       } else {
+         console.log('nej')
         this.username = this.usernameinput.value
+        localStorage.setItem('chat_username', this.username)
         this.usernameWrapper.style.display = 'none'
         this.chatWrapper.classList.toggle('inactive')
+       }
         this.fetchData()
         event.preventDefault()
       })
@@ -363,3 +371,18 @@ customElements.define('chat-app',
           this.chatTextArea.value = ''
     }
   })
+
+/*   event.preventDefault()
+  this.userName = this.inputBox.firstElementChild.value
+  localStorage.setItem('quiz_username', this.userName)
+  document.querySelector('.formWrapper').appendChild(document.createElement('quiz-application'))
+  this.form.style.display = 'none'
+})
+}
+
+/**
+* Assigning the input value to variable.
+*/
+/* connectedCallback () {
+this.inputBox.firstElementChild.value = localStorage.getItem('quiz_username') // The last used nickname starts as a default name.
+} */ 

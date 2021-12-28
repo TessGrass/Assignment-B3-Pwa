@@ -17,7 +17,7 @@ template.innerHTML = `
       text-align: right;
       max-width: 900px;
       height: 27px;
-      z-index: 2000;
+      z-index: 2;
     }
     
     #divcontent {
@@ -138,6 +138,10 @@ customElements.define('desktop-window',
      *
      */
     getZindex () {
+      this.number = this.shadowRoot.querySelector('#windowcontainer').style.zIndex
+      this.stringToNumber = Number(this.number)
+      /* console.log(this.stringToNumber)
+      console.log('röv') */
       return this.shadowRoot.querySelector('#windowcontainer').style.zIndex
     }
     /* focus(setFocus) {

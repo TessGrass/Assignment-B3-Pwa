@@ -142,6 +142,7 @@ customElements.define('memory-game',
       this.matchSound = new Audio('js/components/memory-game/lib/gamenotis.wav')
       this.gameOverSound = new Audio('js/components/memory-game/lib/applause.wav')
       this.matchSound.muted = false
+      this.gameOverSound.muted = false
 
       this.totalTries = 0
       this.sizeOfBoard = 8
@@ -207,6 +208,7 @@ customElements.define('memory-game',
       this.buttonVolume.addEventListener('click', (event) => {
         event.preventDefault()
         this.matchSound.muted = !this.matchSound.muted
+        this.gameOverSound.muted = !this.gameOverSound.muted
         this.buttonVolume.classList.toggle('volumebutton')
         this.buttonVolume.classList.toggle('volumeoff')
       })
@@ -311,6 +313,7 @@ customElements.define('memory-game',
       this.activeTiles = []
       this.matchedCards = []
       this.totalTries = 0
+      this.h1Text.textContent = ''
       this.buttonTryAgain.classList.toggle('inactive')
       this.memoryWrapper.innerHTML = ''
       this.memoryWrapper.style.display = 'none'

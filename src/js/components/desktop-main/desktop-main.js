@@ -179,7 +179,6 @@ input:checked + .slider:before {
 <button type="button" id="memory" class="app"></button>
 <button type="button" id ="chat" class="app"></button>
 <button type="button" id="search-images" class="app"></button>
-<button type="button" id="test" class="app"></button>
 </form>
 </div>
 </div>
@@ -274,6 +273,8 @@ customElements.define('desktop-main',
         desktopWindow.addEventListener('mousedown', (event) => {
           Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // hämtar alla desktop-window vi har appendat från domen.
             window === event.target && window.setZindexTo(this.getHighestZindex() + 1)
+            console.log(event.target)
+            console.log('277')
           })
         })
       })
@@ -303,19 +304,12 @@ customElements.define('desktop-main',
      *
      */
     getHighestZindex () {
-      let highest = 0
+      let highest = 1
       Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // hämtar alla desktop-window vi har appendat från domen.
         if (window.getZindex() > highest) {
-          highest = window.getZindex()
+          highest = Number(window.getZindex())
         }
       })
       return highest
-    }
-
-    /**
-     *
-     */
-    Zindex () {
-
     }
   })
