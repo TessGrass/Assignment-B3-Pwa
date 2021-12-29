@@ -307,7 +307,7 @@ customElements.define('memory-game',
     }
 
     /**
-     *
+     * Restarts the game.
      */
     restartGame () {
       this.activeTiles = []

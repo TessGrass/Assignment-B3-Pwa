@@ -22,7 +22,7 @@ template.innerHTML = `
     margin-top: 5px;
     width: 400px;
     height: 525px;
-    background:white;
+    background:red;
     word-wrap: break-word;
     overflow-y: auto;  
 }
@@ -101,8 +101,17 @@ template.innerHTML = `
     img {
     flex-grow: 1;
     padding: 5px;
+    max-height: 10vh;
+    width: 13vw;
+    cursor: pointer;
+    flex-basis: 28%
+  }
+
+   .giphywindow > img {
+    flex-grow: 1;
+    padding: 5px;
     max-height: 8vh;
-    max-width: 28vw;
+    max-width: 8vw;
     cursor: pointer;
     flex-basis: 28%
   }
@@ -112,11 +121,13 @@ template.innerHTML = `
   }
 
   .recievechat {
+    display: block;
+    clear: both;
     background-color: #92C7A3;
     padding: 5px;
     margin-top: 8px;
-    min-width: 50%;
-    max-width: 55%;
+    min-width: 30%;
+    max-width: 50%;
     max-height: 100%;
     margin-bottom: 5px;
     margin-left: 0px;
@@ -126,12 +137,14 @@ template.innerHTML = `
   }
 
   .mychat {
+    display: block;
+    clear: both;
     float: right;
     background-color: #C0D8D8;
     padding: 5px;
     margin-top: 8px;
-    min-width: 50%;
-    max-width: 55%;
+    min-width: 30%;
+    max-width: 50%;
     max-height: 100%;
     margin-bottom: 5px;
     border-radius: 5px 0px 0px 5px;
@@ -177,7 +190,6 @@ template.innerHTML = `
   .usernameinput {
     text-align: center;
   }
-
 
 
 </style>
@@ -226,20 +238,17 @@ customElements.define('chat-app',
       this.usernamebutton = this.shadowRoot.querySelector('.usernamebutton')
       this.socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
       this.usernameinput.value = localStorage.getItem('chat_username')
-      
-      
+
       this.usernamebutton.addEventListener('click', (event) => {
         if (localStorage.getItem === 'chat_username') {
-          console.log('hej')
-        this.username = localStorage.getItem('chat_username')
-        this.usernameWrapper.style.display = 'none'
-       } else {
-         console.log('nej')
-        this.username = this.usernameinput.value
-        localStorage.setItem('chat_username', this.username)
-        this.usernameWrapper.style.display = 'none'
-        this.chatWrapper.classList.toggle('inactive')
-       }
+          this.username = localStorage.getItem('chat_username')
+          this.usernameWrapper.style.display = 'none'
+        } else {
+          this.username = this.usernameinput.value
+          localStorage.setItem('chat_username', this.username)
+          this.usernameWrapper.style.display = 'none'
+          this.chatWrapper.classList.toggle('inactive')
+        }
         this.fetchData()
         event.preventDefault()
       })
@@ -264,7 +273,7 @@ customElements.define('chat-app',
 
       this.chatTextArea.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
-          this.sendMessage()
+          this.sendMessage(this.chatTextArea.value)
         }
       })
 
@@ -296,9 +305,11 @@ customElements.define('chat-app',
       const data = JSON.parse(event.data)
       if (data.data) {
         const check = this.validURL(data.data)
-        if (check) {
-          this.gifImg = document.createElement('img')
+        console.log(data.data)
+        if (check) { // !check.includes('.svg')
+          this.gifImg = document.createElement('img') // XSS safety
           this.gifImg.src = data.data
+          this.recieveText.classList.add('mychat')
           this.recieveText.append(this.gifImg)
         } else {
           if (data.username === this.username) {
@@ -323,6 +334,7 @@ customElements.define('chat-app',
      * @param {string} str - the parameter that is going to be checked.
       * @returns - true or false.
      */
+    // CODE CREDIT: https://www.codegrepper.com/code-examples/javascript/javascript+check+if+valid+url
     validURL (str) {
       const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
         '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
@@ -346,29 +358,30 @@ customElements.define('chat-app',
       const imagesArray = response.data
       this.gifWindow.innerHTML = ''
       for (let i = 0; i < imagesArray.length; i++) {
-        imagesContainer[i] = document.createElement('div')
+        // imagesContainer[i] = document.createElement('div')
         imagesContainer[i] = document.createElement('img')
         imagesContainer[i].setAttribute('src', imagesArray[i].images.original.url)
-        console.log(imagesContainer[i].src)
+        // console.log(imagesContainer[i].src)
         imagesContainer[i].addEventListener('click', (event) => {
-          this.fetchData.data = imagesContainer[i].src
-          console.log(this.fetchData.data)
-          this.socket.send(JSON.stringify(this.fetchData))
+          this.sendMessage(imagesContainer[i].src)
+          /* this.fetchData.data = imagesContainer[i].src
+          this.socket.send(JSON.stringify(this.fetchData)) */
           this.gifWindow.classList.toggle('inactive')
         })
         this.gifWindow.appendChild(imagesContainer[i])
       }
     }
 
-    sendMessage() {
-      const dataMessage = this.chatTextArea.value
-          /* this.pSendText = document.createElement('p')
-        this.pSendText.classList.add('sendchat')
-        this.pSendText.append(dataMessage)
-        this.chatWindow.appendChild(this.pSendText) */
+    sendMessage(data) {
+      console.log(data)
+      const dataMessage = data
           this.fetchData.data = dataMessage
           this.socket.send(JSON.stringify(this.fetchData))
           this.chatTextArea.value = ''
+      /* const dataMessage = this.chatTextArea.value
+          this.fetchData.data = dataMessage
+          this.socket.send(JSON.stringify(this.fetchData))
+          this.chatTextArea.value = '' */
     }
   })
 

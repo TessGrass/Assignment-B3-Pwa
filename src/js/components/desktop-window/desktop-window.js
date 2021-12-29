@@ -84,14 +84,14 @@ customElements.define('desktop-window',
         /**
          * @param event
          */
+        // DRAGGABLE WINDOW CODE CREDIT: https://www.youtube.com/watch?v=NyZSIhzz5Do
         function mousemove (event) {
           const newX = prevX - event.clientX // difference between old position and new position
           const newY = prevY - event.clientY
           const widthValue = 300
           const heightValue = 340
 
-          const rect = windowContainer.getBoundingClientRect()
-          // checks where the object is positioned in the viewport (domRect)
+          const rect = windowContainer.getBoundingClientRect()// checks where the object is positioned in the viewport (domRect)
           if (rect.x < 0) { // found in domRect, x = 0 is the furthers to the left.
             rect.x = 0
             prevX = 0

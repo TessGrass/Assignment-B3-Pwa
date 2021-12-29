@@ -92,26 +92,25 @@ customElements.define('flipping-tile',
       this.frontCard.classList.add('inactive')
       this.activeCard = false
 
-      this.addEventListener('click', (event) => {
-        this.container.classList.toggle('flipCard')
+      this.addEventListener('click', (event) => { // listens for clicked tile.
+        this.container.classList.toggle('flipCard') // container = whole card.
         this.frontCard.classList.toggle('inactive')
         this.backCard.classList.toggle('inactive')
         this.activeCard = !this.activeCard // växlar mellan sant / falskt
-        this.activeCard && this.dispatchEvent(new CustomEvent('activeTile', { // om kortet är true
+        this.activeCard && this.dispatchEvent(new CustomEvent('activeTile', { // om kortet är true skickas activeTile till memorygame
           detail: {
-            alt: this.querySelector('img').getAttribute('alt')
+            alt: this.querySelector('img').getAttribute('alt') // name of the flipping card.
           }
         }))
       })
       addEventListener('hidematchedcards', (event) => {
-        if (this.frontCard.classList.value !== 'inactive') {
+        if (this.frontCard.classList.value !== 'inactive') { // Remove only the active cards
           this.style.visibility = 'hidden'
-          console.log(this.frontCard)
         }
       })
 
       addEventListener('flipunmatchedcards', (event) => {
-        if (this.frontCard.classList.value !== 'inactive') {
+        if (this.frontCard.classList.value !== 'inactive') { // Remove only the active cards
           this.container.classList.toggle('flipCard')
           this.frontCard.classList.toggle('inactive')
           this.backCard.classList.toggle('inactive')

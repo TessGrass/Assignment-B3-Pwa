@@ -213,7 +213,7 @@ customElements.define('desktop-main',
         event.stopPropagation()
         const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
         this.memoryGame = document.createElement('memory-game')
-        desktopWindow.id = this.value++
+        // desktopWindow.id = this.value++
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
         desktopWindow.divContent.appendChild(this.memoryGame)
@@ -235,9 +235,8 @@ customElements.define('desktop-main',
         event.stopPropagation()
         const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
         this.searchImage = document.createElement('search-image')
-
         desktopWindow.divContent.style.minHeight = '500px'
-        desktopWindow.id = this.value++
+        // desktopWindow.id = this.value++
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
         desktopWindow.divContent.appendChild(this.searchImage)
@@ -259,7 +258,8 @@ customElements.define('desktop-main',
         event.stopPropagation()
         const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
         this.chatApp = document.createElement('chat-app')
-        desktopWindow.id = this.value++
+        // desktopWindow.id = this.value++
+        // console.log(desktopWindow.id)
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
         desktopWindow.divContent.appendChild(this.chatApp)
@@ -273,14 +273,11 @@ customElements.define('desktop-main',
         desktopWindow.addEventListener('mousedown', (event) => {
           Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // hämtar alla desktop-window vi har appendat från domen.
             window === event.target && window.setZindexTo(this.getHighestZindex() + 1)
-            console.log(event.target)
-            console.log('277')
           })
         })
       })
 
       this.slider.addEventListener('click', (event) => {
-        console.log('click')
         this.mainWrapper.classList.toggle('alternatemain')
         if (this.navbar.className === 'navbar') {
           this.apps.forEach(app => {
@@ -301,7 +298,7 @@ customElements.define('desktop-main',
     }
 
     /**
-     *
+     * Get create 
      */
     getHighestZindex () {
       let highest = 1
