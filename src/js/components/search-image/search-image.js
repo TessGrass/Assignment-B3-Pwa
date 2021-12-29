@@ -90,7 +90,7 @@ template.innerHTML = `
 `
 customElements.define('search-image',
   /**
-   * Terminates the time.
+   * Creates a search image component.
    */
   class extends HTMLElement {
   /**
@@ -113,7 +113,7 @@ customElements.define('search-image',
     }
 
     /**
-     *
+     * Get images from Giphy api and append it to the div this.grid.
      */
     async getImages () {
       const url = 'https://api.unsplash.com/search/photos/?query=' + this.input.value + '&orientation=landscape'

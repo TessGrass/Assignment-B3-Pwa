@@ -73,7 +73,7 @@ template.innerHTML = `
 `
 customElements.define('flipping-tile',
   /**
-   * Terminates the time.
+   * Creates a flipping tile component.
    */
   class extends HTMLElement {
   /**

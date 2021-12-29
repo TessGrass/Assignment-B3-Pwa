@@ -116,7 +116,7 @@ template.innerHTML = `
 `
 customElements.define('memory-game',
   /**
-   * Terminates the time.
+   * Creates a memory game component.
    */
   class extends HTMLElement {
   /**
@@ -238,12 +238,12 @@ customElements.define('memory-game',
           image.src = this.images[i].img // slottar in bilden som befinner sig på indexet
           image.alt = this.images[i].name // slottar in namnet (alt) som befinner sig på indexet
           image.id = j // Ger elementet ett id för att kunna se exakt vilket kort som är tryckt, skiftar mellan 0 och 1. (för att undvika dubbeltryckning på samma kort som annars skulle ge rätt)
-          tile.appendChild(image)
-          tiles.push({
+          tile.appendChild(image) // flipping tile appendar bilden
+          tiles.push({ // i arrayen tiles pushar vi in tile
             tile: tile,
             random: Math.random()
           })
-          tile.addEventListener('activeTile', (event) => this.handleTiles({ // triggar ett event och skickar med det som återfinns i detail
+          tile.addEventListener('activeTile', (event) => this.handleTiles({ // Binder en eventlyssnare till varje tile och skickar, vid klick, med det som återfinns i detail
             detail: {
               alt: image.alt,
               id: image.id
@@ -253,7 +253,8 @@ customElements.define('memory-game',
       }
       tiles.sort((a, b) => a.random - b.random)
       tiles.forEach(tile => {
-        this.memoryWrapper.append(tile.tile)
+        console.log(tile.tile)
+        this.memoryWrapper.append(tile.tile) // the created flipping tile hamnar i this.memorywrapper
       })
     }
 
@@ -285,7 +286,7 @@ customElements.define('memory-game',
     }
 
     /**
-     *
+     * Hide the matched cards with a created customEvent.
      */
     hideMatchedCards () {
       this.memoryWrapper.style.pointerEvents = 'auto'
@@ -296,7 +297,7 @@ customElements.define('memory-game',
     }
 
     /**
-     *
+     * Flip the unmatched cards with a created customEvent.
      */
     flipUnmatchedCards () {
       this.memoryWrapper.style.pointerEvents = 'auto'

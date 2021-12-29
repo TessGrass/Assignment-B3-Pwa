@@ -22,7 +22,7 @@ template.innerHTML = `
     margin-top: 5px;
     width: 400px;
     height: 525px;
-    background:red;
+    background: white;
     word-wrap: break-word;
     overflow-y: auto;  
 }
@@ -30,12 +30,12 @@ template.innerHTML = `
 .chattextarea {
     background: black;
     position: absolute;
-    margin-bottom: 8px;
+    margin-bottom: 9px;
     margin-left: 8px;
     bottom: 0px;
     background: white;
-    max-width: 310px;
-    height: 45px;
+    max-width: 309px;
+    height: 50px;
     border: 1px solid #222222;
 }
 
@@ -60,7 +60,7 @@ template.innerHTML = `
     background-size: cover;
     cursor: pointer;      
 }
-    .giphy {
+  .giphy {
     right: 0;
     margin-bottom: 19px;
     margin-right: 45px;
@@ -77,18 +77,26 @@ template.innerHTML = `
     overflow: visible;
 }
 
-    .giphywindow {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row; 
-    border-radius: 10px;
+  .giphywindow {
+    float: right;
+    padding-top: 35px;
+    border-radius: 5px 0px 0px 5px;
     margin: 10px 0px 5px 95px;
-    width: 270px;
-    height: 250px;
-    border: 1px solid black;
-    background: #C8C8C8;
+    width: 290px;
+    min-height: 15px;
+    max-height: 190px;
+    background: #D8D8C0;
     top: 100vh;
 }
+
+  .giphywindow > img {
+    flex-grow: 1;
+    padding: 5px;
+    max-height: 8vh;
+    max-width: 8vw;
+    cursor: pointer;
+    flex-basis: 28%
+  }
 
     input {
     margin-top: 5px;
@@ -103,15 +111,6 @@ template.innerHTML = `
     padding: 5px;
     max-height: 10vh;
     width: 13vw;
-    cursor: pointer;
-    flex-basis: 28%
-  }
-
-   .giphywindow > img {
-    flex-grow: 1;
-    padding: 5px;
-    max-height: 8vh;
-    max-width: 8vw;
     cursor: pointer;
     flex-basis: 28%
   }
@@ -162,6 +161,7 @@ template.innerHTML = `
     font-size: 10px;
     padding-top: 10px;
   }
+
   .timemychat {
     text-align: center;
     margin-left: 0px;
@@ -191,10 +191,22 @@ template.innerHTML = `
     text-align: center;
   }
 
+  .gifsearch {
+    display: block;
+    clear: both;
+    position: absolute;
+    top: 15px;
+    border: 0.5px solid #D8D8C0;
+    border-radius: 5px;
+    padding-left: 7px;
+    width: 120px;
+
+  }
+
 
 </style>
 <div class="usernamewrapper">
-    <input type="text" class="usernameinput" value="" placeholder="Choose your nickname"></input>
+    <input type="text" class="usernameinput" value="" placeholder=" Choose your nickname"></input>
     <button class="usernamebutton">Start chatting</button>
     </div>
   <div class="chatwrapper inactive">
@@ -236,8 +248,8 @@ customElements.define('chat-app',
       this.usernameWrapper = this.shadowRoot.querySelector('.usernamewrapper')
       this.usernameinput = this.shadowRoot.querySelector('.usernameinput')
       this.usernamebutton = this.shadowRoot.querySelector('.usernamebutton')
-      this.socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
       this.usernameinput.value = localStorage.getItem('chat_username')
+      this.socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
 
       this.usernamebutton.addEventListener('click', (event) => {
         if (localStorage.getItem === 'chat_username') {
@@ -254,7 +266,7 @@ customElements.define('chat-app',
       })
 
       this.sendMessageButton.addEventListener('click', (event) => {
-        this.sendMessage()
+        this.sendMessage(this.chatTextArea.value)
         event.preventDefault()
       })
 
@@ -278,14 +290,19 @@ customElements.define('chat-app',
       })
 
       /**
-       * @param event
+       * Checks for new Messages.
+       *
+       * @param {object} event - data from fetchData.
        */
-       this.socket.onmessage = (event) => {
+      this.socket.onmessage = (event) => {
         this.checkNewMessage(event)
       }
     }
 
-    fetchData() {
+    /**
+     * Server with data.
+     */
+    fetchData () {
       this.fetchData = {
         type: 'message',
         data: 'The message text is sent using the data property',
@@ -296,16 +313,20 @@ customElements.define('chat-app',
     }
 
     /**
-     * @param event
+     * Checks for new Messages, and what type of message that is received.
+     *
+     * @param {object} event - data from fetchData.
      */
     checkNewMessage (event) {
+      console.log(event)
+      console.log('här')
       this.recieveText = document.createElement('div')
       this.recieveText.style.width = '350px'
       this.pTime = document.createElement('p')
+
       const data = JSON.parse(event.data)
       if (data.data) {
         const check = this.validURL(data.data)
-        console.log(data.data)
         if (check) { // !check.includes('.svg')
           this.gifImg = document.createElement('img') // XSS safety
           this.gifImg.src = data.data
@@ -332,7 +353,7 @@ customElements.define('chat-app',
      * Checks for valid URL.
      *
      * @param {string} str - the parameter that is going to be checked.
-      * @returns - true or false.
+     * @returns {boolean} - true or false.
      */
     // CODE CREDIT: https://www.codegrepper.com/code-examples/javascript/javascript+check+if+valid+url
     validURL (str) {
@@ -351,7 +372,7 @@ customElements.define('chat-app',
      */
     async getImages () {
       const imagesContainer = []
-      const url = 'https://api.giphy.com/v1/gifs/search?q=' + this.gifSearchField.value + '&rating=g&limit=6&api_key=yQC3qMgBqPWBQDkjDQo7KkJqvY1GiFoH'
+      const url = 'https://api.giphy.com/v1/gifs/search?q=' + this.gifSearchField.value + '&rating=g&limit=4&api_key=yQC3qMgBqPWBQDkjDQo7KkJqvY1GiFoH'
       const fetchedUrl = await fetch(url)
       const response = await fetchedUrl.json()
       console.log(response.data[0].images)
@@ -368,16 +389,22 @@ customElements.define('chat-app',
           this.socket.send(JSON.stringify(this.fetchData)) */
           this.gifWindow.classList.toggle('inactive')
         })
+        this.gifWindow.appendChild(this.gifSearchField)
         this.gifWindow.appendChild(imagesContainer[i])
       }
     }
 
-    sendMessage(data) {
+    /**
+     * Sending a chat message.
+     *
+     * @param {string} data - data that will be sent.
+     */
+    sendMessage (data) {
       console.log(data)
       const dataMessage = data
-          this.fetchData.data = dataMessage
-          this.socket.send(JSON.stringify(this.fetchData))
-          this.chatTextArea.value = ''
+      this.fetchData.data = dataMessage
+      this.socket.send(JSON.stringify(this.fetchData))
+      this.chatTextArea.value = ''
       /* const dataMessage = this.chatTextArea.value
           this.fetchData.data = dataMessage
           this.socket.send(JSON.stringify(this.fetchData))
@@ -398,4 +425,4 @@ customElements.define('chat-app',
 */
 /* connectedCallback () {
 this.inputBox.firstElementChild.value = localStorage.getItem('quiz_username') // The last used nickname starts as a default name.
-} */ 
+} */

@@ -5,7 +5,7 @@ template.innerHTML = `
       display: flex;
       flex-wrap: nowrap;
     width: 420px;
-    height: 500px;
+    height: 450px;
     background: blue;
   }
 
@@ -16,7 +16,6 @@ template.innerHTML = `
       padding-left: 5px;
       padding-top: 5px;
       width: 70px;
-      height: 500px;
       box-shadow: inset 0px 0px 10px rgba(0,0,0,0.5)
   }
 
@@ -62,10 +61,11 @@ customElements.define('popit-game',
         .appendChild(template.content.cloneNode(true))
       this.bubbleRed = this.shadowRoot.querySelector('.bubble')
       this.divRed = this.shadowRoot.querySelector('#red')
+      this.divOrange = this.shadowRoot.querySelector('#orange')
       this.allDiv = this.shadowRoot.querySelectorAll('div')
       this.gameWrapper = this.shadowRoot.querySelector('#gamewrapper')
 
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 8; i++) {
         const bubbleRed = document.createElement('div')
         bubbleRed.classList.add('bubble')
         this.divRed.appendChild(bubbleRed)
@@ -73,6 +73,16 @@ customElements.define('popit-game',
         bubbleRed.addEventListener('click', (event) => {
           bubbleRed.classList.toggle('bubble')
           bubbleRed.classList.toggle('bubble-pop')
+        })
+      }
+      for (let i = 0; i < 8; i++) {
+        const bubbleOrange = document.createElement('div')
+        bubbleOrange.classList.add('bubble')
+        this.divOrange.appendChild(bubbleOrange)
+
+        bubbleOrange.addEventListener('click', (event) => {
+          bubbleOrange.classList.toggle('bubble')
+          bubbleOrange.classList.toggle('bubble-pop')
         })
       }
     }

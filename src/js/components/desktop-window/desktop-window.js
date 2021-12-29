@@ -46,11 +46,11 @@ template.innerHTML = `
 `
 customElements.define('desktop-window',
   /**
-   *
+   * Creates a desktop window component.
    */
   class extends HTMLElement {
   /**
-   *
+   * Creates a instance of the current type.
    */
     constructor () {
       super()
@@ -118,7 +118,7 @@ customElements.define('desktop-window',
           }
         }
         /**
-         *
+         * Removes eventListener when the event mousemove and mouseup is triggered.
          */
         function mouseup () {
           window.removeEventListener('mousemove', mousemove)
@@ -128,20 +128,21 @@ customElements.define('desktop-window',
     }
 
     /**
-     * @param newZindex
+     * Updates the zIndex to the value from parameter.
+     * @param {number} newZindex - Gets the highest z-index from getHighestZindex().
      */
     setZindexTo (newZindex) {
       this.shadowRoot.querySelector('#windowcontainer').style.zIndex = newZindex
     }
 
     /**
+     * Gets the z-index from a window component.
      *
+     * @returns {number} - returns the z-index on the window component.
      */
-    getZindex () {
+    getZindex () { // from this.getHighestZindex()
       this.number = this.shadowRoot.querySelector('#windowcontainer').style.zIndex
       this.stringToNumber = Number(this.number)
-      /* console.log(this.stringToNumber)
-      console.log('röv') */
       return this.shadowRoot.querySelector('#windowcontainer').style.zIndex
     }
     /* focus(setFocus) {

@@ -186,11 +186,11 @@ input:checked + .slider:before {
 `
 customElements.define('desktop-main',
   /**
-   *
+   * Creates a desktop component.
    */
   class extends HTMLElement {
   /**
-   *
+   * Creates a instance of the current type.
    */
     constructor () {
       super()
@@ -213,7 +213,7 @@ customElements.define('desktop-main',
         event.stopPropagation()
         const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
         this.memoryGame = document.createElement('memory-game')
-        // desktopWindow.id = this.value++
+        desktopWindow.id = this.value++
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
         desktopWindow.divContent.appendChild(this.memoryGame)
@@ -236,7 +236,7 @@ customElements.define('desktop-main',
         const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
         this.searchImage = document.createElement('search-image')
         desktopWindow.divContent.style.minHeight = '500px'
-        // desktopWindow.id = this.value++
+        desktopWindow.id = this.value++
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
         desktopWindow.divContent.appendChild(this.searchImage)
@@ -258,7 +258,7 @@ customElements.define('desktop-main',
         event.stopPropagation()
         const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
         this.chatApp = document.createElement('chat-app')
-        // desktopWindow.id = this.value++
+        desktopWindow.id = this.value++
         // console.log(desktopWindow.id)
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
@@ -267,7 +267,7 @@ customElements.define('desktop-main',
         desktopWindow.setZindexTo(this.getHighestZindex())
 
         desktopWindow.addEventListener('closewindow', (event) => {
-          desktopWindow.remove() // tas bort från domen
+          desktopWindow.remove() // tar bort fönstret från domen
         })
 
         desktopWindow.addEventListener('mousedown', (event) => {
@@ -298,7 +298,9 @@ customElements.define('desktop-main',
     }
 
     /**
-     * Get create 
+     * Sets the highest z-index.
+     *
+     * @returns {number} - return highest number.
      */
     getHighestZindex () {
       let highest = 1
@@ -310,3 +312,8 @@ customElements.define('desktop-main',
       return highest
     }
   })
+/* 1. setZindexTo wants index from getHighestZindex
+   2.  getHighestZindex sets each window to the zIndex from getZindex
+   3. getHighestZindex returns the highest number.
+   4. Window gets the highest zIndex.
+  */
