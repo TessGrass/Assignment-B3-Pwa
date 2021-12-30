@@ -129,6 +129,7 @@ customElements.define('desktop-window',
 
     /**
      * Updates the zIndex to the value from parameter.
+     *
      * @param {number} newZindex - Gets the highest z-index from getHighestZindex().
      */
     setZindexTo (newZindex) {
@@ -145,7 +146,4 @@ customElements.define('desktop-window',
       this.stringToNumber = Number(this.number)
       return this.shadowRoot.querySelector('#windowcontainer').style.zIndex
     }
-    /* focus(setFocus) {
-      setFocus ? this.shadowRoot.querySelector('#divwindow').classList.add('focus') : this.shadowRoot.querySelector('#divwindow').classList.remove('focus')
-    } */
   })

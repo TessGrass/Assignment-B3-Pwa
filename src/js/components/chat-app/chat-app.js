@@ -1,3 +1,5 @@
+import { EmojiButton } from '@joeattardi/emoji-button'
+
 const template = document.createElement('template')
 template.innerHTML = `
 <style>
@@ -34,7 +36,7 @@ template.innerHTML = `
     margin-left: 8px;
     bottom: 0px;
     background: white;
-    max-width: 309px;
+    max-width: 280px;
     height: 50px;
     border: 1px solid #222222;
 }
@@ -75,6 +77,7 @@ template.innerHTML = `
     background-position: center;
     background-color: transparent;
     overflow: visible;
+    cursor: pointer;
 }
 
   .giphywindow {
@@ -200,8 +203,25 @@ template.innerHTML = `
     border-radius: 5px;
     padding-left: 7px;
     width: 120px;
-
   }
+
+  #emoji-trigger{
+    float: right;
+    margin-top: 16px;
+    margin-right: 84px;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    border: none;
+    cursor: pointer;
+    background: #222222;
+  }
+
+  .emoji-picker .light {
+    --emoji-per-row: 5 !important; 
+  }
+
+  
 
 
 </style>
@@ -213,14 +233,16 @@ template.innerHTML = `
       <div class="inputbackground">
          <form>
           <textarea class="chattextarea" name="message" rows="4" cols="50" maxlength="200"></textarea>
+          <button id="emoji-trigger">🙂</button>
           <button class="giphy"></button>
-          <button class="paperplane"></button>
+          <button class="paperplane"></button>          
           </form>
       </div>
     <div class="chatwindow">
         <div class="giphywindow inactive">
               <input type="text" class="gifsearch" value="" placeholder="Search your gif here"></input>
         </div>
+        <div class="emojiwindow"></div>
     </div>
 </div>
 `
@@ -246,17 +268,21 @@ customElements.define('chat-app',
       this.chatWrapper = this.shadowRoot.querySelector('.chatwrapper')
       this.pElement = this.shadowRoot.querySelector('.timestamp')
       this.usernameWrapper = this.shadowRoot.querySelector('.usernamewrapper')
-      this.usernameinput = this.shadowRoot.querySelector('.usernameinput')
-      this.usernamebutton = this.shadowRoot.querySelector('.usernamebutton')
-      this.usernameinput.value = localStorage.getItem('chat_username')
+      this.usernameInput = this.shadowRoot.querySelector('.usernameinput')
+      this.usernameButton = this.shadowRoot.querySelector('.usernamebutton')
+      this.usernameInput.value = localStorage.getItem('chat_username')
+      this.trigger = this.shadowRoot.querySelector('#emoji-trigger')
+      this.emojiWindow = this.shadowRoot.querySelector('.emojiwindow')
       this.socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
+      this.picker = new EmojiButton()
+      console.log(this.picker)
 
-      this.usernamebutton.addEventListener('click', (event) => {
+      this.usernameButton.addEventListener('click', (event) => {
         if (localStorage.getItem === 'chat_username') {
           this.username = localStorage.getItem('chat_username')
           this.usernameWrapper.style.display = 'none'
         } else {
-          this.username = this.usernameinput.value
+          this.username = this.usernameInput.value
           localStorage.setItem('chat_username', this.username)
           this.usernameWrapper.style.display = 'none'
           this.chatWrapper.classList.toggle('inactive')
@@ -289,6 +315,23 @@ customElements.define('chat-app',
         }
       })
 
+      this.trigger.addEventListener('click', (event) => {
+        event.preventDefault()
+        this.picker.wrapper.style.zIndex = '1000'
+        console.log(this.picker)
+        // this.picker.wrapper.style.display === 'block' ?  this.picker.wrapper.style.display = 'none' : this.picker.wrapper.style.display = 'block'
+        // this.picker.wrapper.style.zIndex === '' ? this.picker.wrapper.style.zIndex = '10000' : this.picker.wrapper.style.zIndex = ''
+        // this.picker.wrapper.style.background = 'red'
+        //this.picker.wrapper.style.maxwidth = '100px'
+        // this.emojiWindow.append(this.picker)
+        this.picker.togglePicker(this.chatTextArea)
+      })
+
+      this.picker.on('emoji', selection => {
+        this.sendMessage(selection.emoji)
+        console.log(selection.emoji)
+      })
+
       /**
        * Checks for new Messages.
        *
@@ -296,6 +339,7 @@ customElements.define('chat-app',
        */
       this.socket.onmessage = (event) => {
         this.checkNewMessage(event)
+        // console.log(this.socket)
       }
     }
 
@@ -346,6 +390,7 @@ customElements.define('chat-app',
           this.recieveText.append(this.pTime)
         }
         this.chatWindow.appendChild(this.recieveText)
+        this.chatWindow.scrollTop = this.chatWindow.scrollHeight
       }
     }
 
@@ -401,6 +446,7 @@ customElements.define('chat-app',
      */
     sendMessage (data) {
       console.log(data)
+      console.log('fdgh')
       const dataMessage = data
       this.fetchData.data = dataMessage
       this.socket.send(JSON.stringify(this.fetchData))
