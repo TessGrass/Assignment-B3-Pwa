@@ -14,7 +14,7 @@ template.innerHTML = `
     position: relative;
     background: #222222;
     width: 400px;
-    height: 600px;
+    height: 520px;
 }
 
 .chatwindow {
@@ -23,7 +23,7 @@ template.innerHTML = `
     margin-right: 10px;
     margin-top: 5px;
     width: 400px;
-    height: 525px;
+    height: 510px;
     background: white;
     word-wrap: break-word;
     overflow-y: auto;  
@@ -85,7 +85,7 @@ template.innerHTML = `
     padding-top: 35px;
     border-radius: 5px 0px 0px 5px;
     margin: 10px 0px 5px 95px;
-    width: 290px;
+    width: 260px;
     min-height: 15px;
     max-height: 190px;
     background: #D8D8C0;
@@ -95,8 +95,8 @@ template.innerHTML = `
   .giphywindow > img {
     flex-grow: 1;
     padding: 5px;
-    max-height: 8vh;
-    max-width: 8vw;
+    max-height: 6vh;
+    max-width: 6vw;
     cursor: pointer;
     flex-basis: 28%
   }
@@ -154,6 +154,11 @@ template.innerHTML = `
     text-overflow: ellipsis;
   }
 
+  .mychat > img {
+    width: 90%
+
+  }
+
   .timerecievechat {
     float: right;
     text-align: center;
@@ -180,8 +185,8 @@ template.innerHTML = `
     justify-content: center;
     flex-direction: column; 
     align-items: center;
-    width: 250px;
-    height: 250px;
+    width: 400px;
+    height: 480px;
   }
 
   .usernamebutton {
@@ -217,8 +222,14 @@ template.innerHTML = `
     background: #222222;
   }
 
-  .emoji-picker .light {
+  .emoji-picker {
     --emoji-per-row: 5 !important; 
+  }
+
+  .connect {
+    font-size: 20px;
+    padding-bottom: 10px;
+    font-family: arial;
   }
 
   
@@ -226,6 +237,7 @@ template.innerHTML = `
 
 </style>
 <div class="usernamewrapper">
+  <p class="connect">CONNECT TO CHAT</p>
     <input type="text" class="usernameinput" value="" placeholder=" Choose your nickname"></input>
     <button class="usernamebutton">Start chatting</button>
     </div>
@@ -274,8 +286,7 @@ customElements.define('chat-app',
       this.trigger = this.shadowRoot.querySelector('#emoji-trigger')
       this.emojiWindow = this.shadowRoot.querySelector('.emojiwindow')
       this.socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
-      this.picker = new EmojiButton()
-      console.log(this.picker)
+      this.picker = new EmojiButton({ theme: 'dark' })
 
       this.usernameButton.addEventListener('click', (event) => {
         if (localStorage.getItem === 'chat_username') {
@@ -318,12 +329,6 @@ customElements.define('chat-app',
       this.trigger.addEventListener('click', (event) => {
         event.preventDefault()
         this.picker.wrapper.style.zIndex = '1000'
-        console.log(this.picker)
-        // this.picker.wrapper.style.display === 'block' ?  this.picker.wrapper.style.display = 'none' : this.picker.wrapper.style.display = 'block'
-        // this.picker.wrapper.style.zIndex === '' ? this.picker.wrapper.style.zIndex = '10000' : this.picker.wrapper.style.zIndex = ''
-        // this.picker.wrapper.style.background = 'red'
-        //this.picker.wrapper.style.maxwidth = '100px'
-        // this.emojiWindow.append(this.picker)
         this.picker.togglePicker(this.chatTextArea)
       })
 
@@ -424,14 +429,10 @@ customElements.define('chat-app',
       const imagesArray = response.data
       this.gifWindow.innerHTML = ''
       for (let i = 0; i < imagesArray.length; i++) {
-        // imagesContainer[i] = document.createElement('div')
         imagesContainer[i] = document.createElement('img')
         imagesContainer[i].setAttribute('src', imagesArray[i].images.original.url)
-        // console.log(imagesContainer[i].src)
         imagesContainer[i].addEventListener('click', (event) => {
           this.sendMessage(imagesContainer[i].src)
-          /* this.fetchData.data = imagesContainer[i].src
-          this.socket.send(JSON.stringify(this.fetchData)) */
           this.gifWindow.classList.toggle('inactive')
         })
         this.gifWindow.appendChild(this.gifSearchField)
@@ -457,18 +458,3 @@ customElements.define('chat-app',
           this.chatTextArea.value = '' */
     }
   })
-
-/*   event.preventDefault()
-  this.userName = this.inputBox.firstElementChild.value
-  localStorage.setItem('quiz_username', this.userName)
-  document.querySelector('.formWrapper').appendChild(document.createElement('quiz-application'))
-  this.form.style.display = 'none'
-})
-}
-
-/**
-* Assigning the input value to variable.
-*/
-/* connectedCallback () {
-this.inputBox.firstElementChild.value = localStorage.getItem('quiz_username') // The last used nickname starts as a default name.
-} */

@@ -77,8 +77,8 @@ template.innerHTML = `
   }
 
     #buttonwrapper {
-    min-width: 300px;
-    min-height: 300px;
+    min-width: 400px;
+    min-height: 450px;
     display: flex;
     align-items: center;
     justify-content: center;

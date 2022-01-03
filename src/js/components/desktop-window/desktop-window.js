@@ -72,7 +72,9 @@ customElements.define('desktop-window',
       // this.divContent.style.pointerEvents = 'none'
 
       /**
-       * @param event
+       * Sets the coordinates of a mousedown event.
+       *
+       * @param {object} event - mousedown event.
        */
       function mousedown (event) {
         addEventListener('mousemove', mousemove)
@@ -82,14 +84,16 @@ customElements.define('desktop-window',
         let prevY = event.clientY
 
         /**
-         * @param event
+         * Makes a window draggable.
+         *
+         * @param {object} event - mousemove event.
          */
-        // DRAGGABLE WINDOW CODE CREDIT: https://www.youtube.com/watch?v=NyZSIhzz5Do
+        // DRAGGABLE WINDOW CODE CREDIT (partial): https://www.youtube.com/watch?v=NyZSIhzz5Do
         function mousemove (event) {
           const newX = prevX - event.clientX // difference between old position and new position
           const newY = prevY - event.clientY
-          const widthValue = 300
-          const heightValue = 340
+          const widthValue = 420
+          const heightValue = 450
 
           const rect = windowContainer.getBoundingClientRect()// checks where the object is positioned in the viewport (domRect)
           if (rect.x < 0) { // found in domRect, x = 0 is the furthers to the left.

@@ -23,6 +23,7 @@ template.innerHTML = `
       max-height: 600px;
       background: #F5F5F5;
       border: 0.5 solid #222222;
+      padding-left: 10px;
   }
 
   input {
@@ -65,7 +66,7 @@ template.innerHTML = `
 
   img:hover {
     margin: 0px;
-    border: 1px solid red;    
+    border: 1px solid black;    
   }
 
   h1 {

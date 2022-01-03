@@ -63,6 +63,7 @@ template.innerHTML = `
   height: 50px;
   background-color: rgba(200,200,200,0.8);
   border-radius: 15px 15px 0px 0px;
+  z-index: 9999;
 }
 
 .navbar .app {
@@ -212,6 +213,7 @@ customElements.define('desktop-main',
       this.memoryButton.addEventListener('click', (event) => {
         event.stopPropagation()
         const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
+        console.log(desktopWindow.getZindex())
         this.memoryGame = document.createElement('memory-game')
         desktopWindow.id = this.value++
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
