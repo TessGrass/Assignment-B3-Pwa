@@ -92,7 +92,7 @@ customElements.define('desktop-window',
         function mousemove (event) {
           const newX = prevX - event.clientX // difference between old position and new position
           const newY = prevY - event.clientY
-          const widthValue = 420
+          const widthValue = 380
           const heightValue = 450
 
           const rect = windowContainer.getBoundingClientRect()// checks where the object is positioned in the viewport (domRect)
@@ -145,7 +145,7 @@ customElements.define('desktop-window',
      *
      * @returns {number} - returns the z-index on the window component.
      */
-    getZindex () { // from this.getHighestZindex()
+    getZindex () { // from this.getHighestZindex() method.
       this.number = this.shadowRoot.querySelector('#windowcontainer').style.zIndex
       this.stringToNumber = Number(this.number)
       return this.shadowRoot.querySelector('#windowcontainer').style.zIndex

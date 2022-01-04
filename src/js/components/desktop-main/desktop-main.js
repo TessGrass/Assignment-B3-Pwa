@@ -1,3 +1,4 @@
+
 const template = document.createElement('template')
 template.innerHTML = `
 <style>
@@ -211,11 +212,12 @@ customElements.define('desktop-main',
       this.value = 1
 
       this.memoryButton.addEventListener('click', (event) => {
+        this.createApp(event.target.id)
         event.stopPropagation()
-        const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
-        console.log(desktopWindow.getZindex())
-        this.memoryGame = document.createElement('memory-game')
+        /* const desktopWindow = document.createElement('desktop-window')
+       this.memoryGame = document.createElement('memory-game')
         desktopWindow.id = this.value++
+        console.log(desktopWindow.id)
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
         desktopWindow.divContent.appendChild(this.memoryGame)
@@ -223,19 +225,20 @@ customElements.define('desktop-main',
         desktopWindow.setZindexTo(this.getHighestZindex())
 
         desktopWindow.addEventListener('closewindow', (event) => {
-          desktopWindow.remove() // tas bort från domen
+          desktopWindow.remove()
         })
 
         desktopWindow.addEventListener('mousedown', (event) => {
-          Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // hämtar alla desktop-window vi har appendat från domen.
+          Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // fetching all desktop-windows in the DOM.
             window === event.target && window.setZindexTo(this.getHighestZindex() + 1)
           })
-        })
+        }) */
       })
 
       this.searchImagesButton.addEventListener('click', (event) => {
+        this.createApp(event.target.id)
         event.stopPropagation()
-        const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
+        /* const desktopWindow = document.createElement('desktop-window')
         this.searchImage = document.createElement('search-image')
         desktopWindow.divContent.style.minHeight = '500px'
         desktopWindow.id = this.value++
@@ -246,22 +249,22 @@ customElements.define('desktop-main',
         desktopWindow.setZindexTo(this.getHighestZindex())
 
         desktopWindow.addEventListener('closewindow', (event) => {
-          desktopWindow.remove() // tas bort från domen
+          desktopWindow.remove()
         })
 
         desktopWindow.addEventListener('mousedown', (event) => {
-          Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // hämtar alla desktop-window vi har appendat från domen.
+          Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // fetching all desktop-windows in the DOM.
             window === event.target && window.setZindexTo(this.getHighestZindex() + 1)
           })
-        })
+        }) */
       })
 
       this.chatButton.addEventListener('click', (event) => {
+        this.createApp(event.target.id)
         event.stopPropagation()
-        const desktopWindow = document.createElement('desktop-window') // För att inte this.desktopWindow ska leva kvar hela tiden. Const lever här och nu.
+        /* const desktopWindow = document.createElement('desktop-window')
         this.chatApp = document.createElement('chat-app')
         desktopWindow.id = this.value++
-        // console.log(desktopWindow.id)
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
         desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
         desktopWindow.divContent.appendChild(this.chatApp)
@@ -269,17 +272,17 @@ customElements.define('desktop-main',
         desktopWindow.setZindexTo(this.getHighestZindex())
 
         desktopWindow.addEventListener('closewindow', (event) => {
-          desktopWindow.remove() // tar bort fönstret från domen
+          desktopWindow.remove()
         })
 
         desktopWindow.addEventListener('mousedown', (event) => {
-          Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // hämtar alla desktop-window vi har appendat från domen.
+          Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // fetching all desktop-windows in the DOM.
             window === event.target && window.setZindexTo(this.getHighestZindex() + 1)
           })
-        })
+        }) */
       })
 
-      this.slider.addEventListener('click', (event) => {
+      this.slider.addEventListener('click', (event) => { // toggle alternate desktop theme.
         this.mainWrapper.classList.toggle('alternatemain')
         if (this.navbar.className === 'navbar') {
           this.apps.forEach(app => {
@@ -300,13 +303,45 @@ customElements.define('desktop-main',
     }
 
     /**
+     * Creates a desktop-window component for a specific app.
+     *
+     * @param {string} name - the name of the app that called the method.
+     */
+    createApp (name) {
+      const desktopWindow = document.createElement('desktop-window')
+      if (name === 'memory') this.memoryGame = document.createElement('memory-game')
+      else if (name === 'search-images') this.searchImage = document.createElement('search-image')
+      else if (name === 'chat') this.chatApp = document.createElement('chat-app')
+      desktopWindow.id = this.value++
+      console.log(desktopWindow.id)
+      desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
+      desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
+      if (name === 'memory') desktopWindow.divContent.appendChild(this.memoryGame)
+      else if (name === 'search-images') desktopWindow.divContent.appendChild(this.searchImage)
+      else if (name === 'chat') desktopWindow.divContent.appendChild(this.chatApp)
+      this.mainWindow.appendChild(desktopWindow)
+      desktopWindow.setZindexTo(this.getHighestZindex())
+
+      desktopWindow.addEventListener('closewindow', (event) => {
+        console.log(event.target)
+        desktopWindow.remove()
+      })
+
+      desktopWindow.addEventListener('mousedown', (event) => {
+        Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // fetching all desktop-windows in the DOM.
+          window === event.target && window.setZindexTo(this.getHighestZindex() + 1)
+        })
+      })
+    }
+
+    /**
      * Sets the highest z-index.
      *
      * @returns {number} - return highest number.
      */
     getHighestZindex () {
       let highest = 1
-      Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // hämtar alla desktop-window vi har appendat från domen.
+      Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // fetching all desktop-windows in the DOM.
         if (window.getZindex() > highest) {
           highest = Number(window.getZindex())
         }

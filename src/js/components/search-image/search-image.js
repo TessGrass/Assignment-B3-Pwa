@@ -11,6 +11,7 @@ template.innerHTML = `
     display: flex;
     flex-wrap: wrap;
     max-width: 900px;
+    min-height: 400px;
     max-height: 900px;
   }
 
@@ -117,27 +118,31 @@ customElements.define('search-image',
      * Get images from Giphy api and append it to the div this.grid.
      */
     async getImages () {
-      const url = 'https://api.unsplash.com/search/photos/?query=' + this.input.value + '&orientation=landscape'
-      const fetchedUrl = await fetch(url, {
-        headers: {
-          Authorization: 'Client-ID iczfs_vxPOCtlCw-rifNqkkcu5hxrangGv7GVR3br3s'
-        }
-      })
-      const response = await fetchedUrl.json()
-      console.log(response)
-      const images = response.results
-      const imagesArray = images.slice(0, 9)
-      const imagesContainer = []
-      this.grid.innerHTML = ''
-      for (let i = 0; i < imagesArray.length; i++) {
-        imagesContainer[i] = document.createElement('div')
-        imagesContainer[i] = document.createElement('img')
-        imagesContainer[i].src = imagesArray[i].urls.small
-        imagesContainer[i].setAttribute('title', 'Proceed to Unsplash.com')
-        imagesContainer[i].addEventListener('click', (event) => {
-          window.open(imagesArray[i].links.html, '_blank')
+      try {
+        const url = 'https://api.unsplash.com/search/photos/?query=' + this.input.value + '&orientation=landscape'
+        const fetchedUrl = await fetch(url, {
+          headers: {
+            Authorization: 'Client-ID iczfs_vxPOCtlCw-rifNqkkcu5hxrangGv7GVR3br3s'
+          }
         })
-        this.grid.appendChild(imagesContainer[i])
+        const response = await fetchedUrl.json()
+        console.log(response)
+        const images = response.results
+        const imagesArray = images.slice(0, 9)
+        const imagesContainer = []
+        this.grid.innerHTML = ''
+        for (let i = 0; i < imagesArray.length; i++) {
+          imagesContainer[i] = document.createElement('div')
+          imagesContainer[i] = document.createElement('img')
+          imagesContainer[i].src = imagesArray[i].urls.small
+          imagesContainer[i].setAttribute('title', 'Proceed to Unsplash.com')
+          imagesContainer[i].addEventListener('click', (event) => {
+            window.open(imagesArray[i].links.html, '_blank')
+          })
+          this.grid.appendChild(imagesContainer[i])
+        }
+      } catch (error) {
+        console.log('Oops, something went wrong')
       }
     }
   })

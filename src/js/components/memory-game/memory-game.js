@@ -149,7 +149,7 @@ customElements.define('memory-game',
 
       this.images = [{
         name: 'tv',
-        img: 'images/tv.png'
+        img: 'js/components/memory-game/lib/tv.png'
       },
       {
         name: 'controller',

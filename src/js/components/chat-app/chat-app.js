@@ -19,11 +19,12 @@ template.innerHTML = `
 
 .chatwindow {
   display:block;
+  position: relative;
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 5px;
     width: 400px;
-    height: 510px;
+    height: 445px;
     background: white;
     word-wrap: break-word;
     overflow-y: auto;  
@@ -82,14 +83,17 @@ template.innerHTML = `
 
   .giphywindow {
     float: right;
-    padding-top: 35px;
+    display: block;
+    position: fixed;
+    bottom: 0;
+    top: 45%;
     border-radius: 5px 0px 0px 5px;
-    margin: 10px 0px 5px 95px;
+    margin: 0px 0px 5px 115px;
     width: 260px;
+    padding-top: 40px;
     min-height: 15px;
-    max-height: 190px;
-    background: #D8D8C0;
-    top: 100vh;
+    max-height: 140px;
+    background: #D8D8C0;    
 }
 
   .giphywindow > img {
@@ -203,7 +207,8 @@ template.innerHTML = `
     display: block;
     clear: both;
     position: absolute;
-    top: 15px;
+    top: 1px;
+    margin-bottom: 5px;
     border: 0.5px solid #D8D8C0;
     border-radius: 5px;
     padding-left: 7px;
@@ -298,7 +303,7 @@ customElements.define('chat-app',
           this.usernameWrapper.style.display = 'none'
           this.chatWrapper.classList.toggle('inactive')
         }
-        this.fetchData()
+        this.webSocketData()
         event.preventDefault()
       })
 
@@ -343,21 +348,28 @@ customElements.define('chat-app',
        * @param {object} event - data from fetchData.
        */
       this.socket.onmessage = (event) => {
+        console.log('this.socket rad 351')
         this.checkNewMessage(event)
-        // console.log(this.socket)
+        console.log('this.socket rad 354')
       }
     }
 
     /**
      * Server with data.
      */
-    fetchData () {
-      this.fetchData = {
-        type: 'message',
-        data: 'The message text is sent using the data property',
-        username: this.username,
-        channel: 'my, not so secret, channel',
-        key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+    webSocketData () {
+      try {
+        // this.socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
+        this.fetchData = {
+          type: 'message',
+          data: 'The message text is sent using the data property',
+          username: this.username,
+          channel: 'my, not so secret, channel',
+          key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
+        }
+        console.log(this.fetchData)
+      } catch (error) {
+        console.log('Oops, something went wrong')
       }
     }
 
@@ -367,35 +379,39 @@ customElements.define('chat-app',
      * @param {object} event - data from fetchData.
      */
     checkNewMessage (event) {
-      console.log(event)
-      console.log('här')
-      this.recieveText = document.createElement('div')
-      this.recieveText.style.width = '350px'
-      this.pTime = document.createElement('p')
+      try {
+        const data = JSON.parse(event.data)
+        console.log('checkNewMessage row 381')
 
-      const data = JSON.parse(event.data)
-      if (data.data) {
-        const check = this.validURL(data.data)
-        if (check) { // !check.includes('.svg')
-          this.gifImg = document.createElement('img') // XSS safety
-          this.gifImg.src = data.data
-          this.recieveText.classList.add('mychat')
-          this.recieveText.append(this.gifImg)
-        } else {
-          if (data.username === this.username) {
+        if (data.data) {
+          this.recieveText = document.createElement('div')
+          this.recieveText.style.width = '350px'
+          this.pTime = document.createElement('p')
+          const check = this.validURL(data.data)
+          if (check) {
+            this.gifImg = document.createElement('img') // Question: if, for example, a SVG with hidden script is sent an <img> tag will not allow the script to run.
+            this.gifImg.src = data.data
             this.recieveText.classList.add('mychat')
-            this.pTime.classList.add('timemychat')
+            this.recieveText.append(this.gifImg)
           } else {
-            this.recieveText.classList.add('recievechat')
-            this.pTime.classList.add('timerecievechat')
+            if (data.username === this.username) {
+              this.recieveText.classList.add('mychat')
+              this.pTime.classList.add('timemychat')
+            } else {
+              this.recieveText.classList.add('recievechat')
+              this.pTime.classList.add('timerecievechat')
+            }
+            const today = new Date()
+            console.log('checkNewMessage 402')
+            this.recieveText.append(data.username + ':' + data.data)
+            this.pTime.textContent = today.getHours() + ':' + (today.getMinutes() < 10 ? '0' : '') + today.getMinutes()
+            this.recieveText.append(this.pTime)
           }
-          const today = new Date()
-          this.recieveText.append(data.username + ':' + data.data)
-          this.pTime.textContent = today.getHours() + ':' + (today.getMinutes() < 10 ? '0' : '') + today.getMinutes()
-          this.recieveText.append(this.pTime)
+          this.chatWindow.appendChild(this.recieveText)
+          this.chatWindow.scrollTop = this.chatWindow.scrollHeight
         }
-        this.chatWindow.appendChild(this.recieveText)
-        this.chatWindow.scrollTop = this.chatWindow.scrollHeight
+      } catch (error) {
+        console.log('Oops, something went wrong')
       }
     }
 
@@ -418,25 +434,30 @@ customElements.define('chat-app',
     }
 
     /**
-     * Implementing the gif API.
+     * Implementing the giphy API.
      */
     async getImages () {
-      const imagesContainer = []
-      const url = 'https://api.giphy.com/v1/gifs/search?q=' + this.gifSearchField.value + '&rating=g&limit=4&api_key=yQC3qMgBqPWBQDkjDQo7KkJqvY1GiFoH'
-      const fetchedUrl = await fetch(url)
-      const response = await fetchedUrl.json()
-      console.log(response.data[0].images)
-      const imagesArray = response.data
-      this.gifWindow.innerHTML = ''
-      for (let i = 0; i < imagesArray.length; i++) {
-        imagesContainer[i] = document.createElement('img')
-        imagesContainer[i].setAttribute('src', imagesArray[i].images.original.url)
-        imagesContainer[i].addEventListener('click', (event) => {
-          this.sendMessage(imagesContainer[i].src)
-          this.gifWindow.classList.toggle('inactive')
-        })
-        this.gifWindow.appendChild(this.gifSearchField)
-        this.gifWindow.appendChild(imagesContainer[i])
+      try {
+        console.log('getImages 433')
+        const imagesContainer = []
+        const url = 'https://api.giphy.com/v1/gifs/search?q=' + this.gifSearchField.value + '&rating=g&limit=4&api_key=yQC3qMgBqPWBQDkjDQo7KkJqvY1GiFoH'
+        const fetchedUrl = await fetch(url)
+        const response = await fetchedUrl.json()
+        console.log(response.data[0].images)
+        const imagesArray = response.data
+        this.gifWindow.innerHTML = ''
+        for (let i = 0; i < imagesArray.length; i++) {
+          imagesContainer[i] = document.createElement('img')
+          imagesContainer[i].setAttribute('src', imagesArray[i].images.original.url)
+          imagesContainer[i].addEventListener('click', (event) => {
+            this.sendMessage(imagesContainer[i].src)
+            this.gifWindow.classList.toggle('inactive')
+          })
+          this.gifWindow.appendChild(this.gifSearchField)
+          this.gifWindow.appendChild(imagesContainer[i])
+        }
+      } catch (error) {
+        console.log('Oops, something went wrong')
       }
     }
 
@@ -446,15 +467,24 @@ customElements.define('chat-app',
      * @param {string} data - data that will be sent.
      */
     sendMessage (data) {
-      console.log(data)
-      console.log('fdgh')
-      const dataMessage = data
-      this.fetchData.data = dataMessage
-      this.socket.send(JSON.stringify(this.fetchData))
-      this.chatTextArea.value = ''
-      /* const dataMessage = this.chatTextArea.value
-          this.fetchData.data = dataMessage
-          this.socket.send(JSON.stringify(this.fetchData))
-          this.chatTextArea.value = '' */
+      try {
+        console.log('sendMessage 459')
+        // const dataMessage = data
+        this.fetchData.data = data
+        console.log(this.fetchData.data)
+        this.socket.send(JSON.stringify(this.fetchData))
+        this.chatTextArea.value = ''
+      } catch (error) {
+        console.log('Oops, something went wrong')
+      }
+    }
+
+    /**
+     * Closes the socket connection.
+     *
+     */
+    disconnectedCallback () {
+      console.log('close')
+      this.socket.close()
     }
   })
