@@ -137,7 +137,7 @@ customElements.define('memory-game',
       this.h1Text = this.shadowRoot.querySelector('h1')
       this.memoryWrapper.style.display = 'none'
       this.buttonVolume.classList.add('inactive')
-      this.flipUnmatchedCards = this.flipUnmatchedCards.bind(this) // annars hittar vi inte t.ex. this.memorywrapper i funktionen.
+      this.flipUnmatchedCards = this.flipUnmatchedCards.bind(this) // Or else we can't find this.flipUnmatchedCards in the function.
       this.hideMatchedCards = this.hideMatchedCards.bind(this)
       this.matchSound = new Audio('js/components/memory-game/lib/gamenotis.wav')
       this.gameOverSound = new Audio('js/components/memory-game/lib/applause.wav')
@@ -229,32 +229,32 @@ customElements.define('memory-game',
       const tiles = []
       this.buttonWrapper.style.display = 'none'
       this.buttonVolume.style.display = 'flex'
-      this.memoryWrapper.style.display = 'flex' // togglar mellan synlig / ej synlig.
+      this.memoryWrapper.style.display = 'flex'
       for (let i = 0; i < this.sizeOfBoard; i++) {
-        for (let j = 0; j < 2; j++) { // för varje yttre iteration så görs två iterationer och flipping-tile skapas
+        for (let j = 0; j < 2; j++) {
           const tile = document.createElement('flipping-tile')
           const image = document.createElement('img')
           image.slot = 'front'
-          image.src = this.images[i].img // slottar in bilden som befinner sig på indexet
-          image.alt = this.images[i].name // slottar in namnet (alt) som befinner sig på indexet
-          image.id = j // Ger elementet ett id för att kunna se exakt vilket kort som är tryckt, skiftar mellan 0 och 1. (för att undvika dubbeltryckning på samma kort som annars skulle ge rätt)
-          tile.appendChild(image) // flipping tile appendar bilden
-          tiles.push({ // i arrayen tiles pushar vi in tile
+          image.src = this.images[i].img // Image at the given index is slotted.
+          image.alt = this.images[i].name // The image alt at the given index is slotted
+          image.id = j // Gives the element an ID to determ which card is flipped, shifts between 0 and 1.
+          tile.appendChild(image) // flipping tile appends the image.
+          tiles.push({ // tile is pushed into the array.
             tile: tile,
             random: Math.random()
           })
-          tile.addEventListener('activeTile', (event) => this.handleTiles({ // Binder en eventlyssnare till varje tile och skickar, vid klick, med det som återfinns i detail
+          tile.addEventListener('activeTile', (event) => this.handleTiles({ // Binds an event listener to every tile.
             detail: {
               alt: image.alt,
-              id: image.id
+              id: image.id,
+              target: event.target
             }
           }))
         }
       }
       tiles.sort((a, b) => a.random - b.random)
       tiles.forEach(tile => {
-        console.log(tile.tile)
-        this.memoryWrapper.append(tile.tile) // the created flipping tile hamnar i this.memorywrapper
+        this.memoryWrapper.append(tile.tile) // this.memorywrapper appends the flipping tile.
       })
     }
 
@@ -267,7 +267,7 @@ customElements.define('memory-game',
       this.activeTiles.push(data.detail)
       if (this.activeTiles.length === 2) {
         this.memoryWrapper.style.pointerEvents = 'none'
-        if (this.activeTiles[0].alt === this.activeTiles[1].alt && this.activeTiles[0].id !== this.activeTiles[1].id) { // så att inte två tryck på samma kort resulterar i rätt svar
+        if (this.activeTiles[0].alt === this.activeTiles[1].alt && this.activeTiles[0].id !== this.activeTiles[1].id) {
           this.matchedCards.push(this.activeTiles)
           this.matchSound.play()
           setTimeout(this.hideMatchedCards, 1000)
@@ -279,32 +279,31 @@ customElements.define('memory-game',
           this.gameOverSound.play()
           this.buttonTryAgain.classList.toggle('inactive')
         }
-        this.activeTiles = []
         this.totalTries++
         this.h1Text.textContent = `Total tries: ${this.totalTries}`
       }
     }
 
     /**
-     * Hide the matched cards with a created customEvent.
+     * Hide the matched cards.
      */
     hideMatchedCards () {
       this.memoryWrapper.style.pointerEvents = 'auto'
-      this.dispatchEvent(new CustomEvent('hidematchedcards', {
-        bubbles: true,
-        composed: true
-      }))
+      this.activeTiles.forEach(tile => {
+        tile.target.hideMatchedCard()
+      })
+      this.activeTiles = []
     }
 
     /**
-     * Flip the unmatched cards with a created customEvent.
+     * Flip the unmatched cards.
      */
     flipUnmatchedCards () {
       this.memoryWrapper.style.pointerEvents = 'auto'
-      this.dispatchEvent(new CustomEvent('flipunmatchedcards', {
-        bubbles: true,
-        composed: true
-      }))
+      this.activeTiles.forEach(tile => {
+        tile.target.flippedUnmatchedCard()
+      })
+      this.activeTiles = []
     }
 
     /**

@@ -313,7 +313,6 @@ customElements.define('desktop-main',
       else if (name === 'search-images') this.searchImage = document.createElement('search-image')
       else if (name === 'chat') this.chatApp = document.createElement('chat-app')
       desktopWindow.id = this.value++
-      console.log(desktopWindow.id)
       desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
       desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
       if (name === 'memory') desktopWindow.divContent.appendChild(this.memoryGame)
@@ -323,7 +322,6 @@ customElements.define('desktop-main',
       desktopWindow.setZindexTo(this.getHighestZindex())
 
       desktopWindow.addEventListener('closewindow', (event) => {
-        console.log(event.target)
         desktopWindow.remove()
       })
 
@@ -349,8 +347,3 @@ customElements.define('desktop-main',
       return highest
     }
   })
-/* 1. setZindexTo wants index from getHighestZindex
-   2.  getHighestZindex sets each window to the zIndex from getZindex
-   3. getHighestZindex returns the highest number.
-   4. Window gets the highest zIndex.
-  */

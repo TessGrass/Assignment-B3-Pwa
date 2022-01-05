@@ -93,7 +93,8 @@ template.innerHTML = `
     padding-top: 40px;
     min-height: 15px;
     max-height: 140px;
-    background: #D8D8C0;    
+    background: #D8D8C0;
+    box-shadow: rgb(0 0 0 / 24%) 0px 3px 8px;
 }
 
   .giphywindow > img {
@@ -326,7 +327,8 @@ customElements.define('chat-app',
       })
 
       this.chatTextArea.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault()
           this.sendMessage(this.chatTextArea.value)
         }
       })
@@ -339,7 +341,6 @@ customElements.define('chat-app',
 
       this.picker.on('emoji', selection => {
         this.sendMessage(selection.emoji)
-        console.log(selection.emoji)
       })
 
       /**
@@ -348,18 +349,15 @@ customElements.define('chat-app',
        * @param {object} event - data from fetchData.
        */
       this.socket.onmessage = (event) => {
-        console.log('this.socket rad 351')
         this.checkNewMessage(event)
-        console.log('this.socket rad 354')
       }
     }
 
     /**
-     * Server with data.
+     * WebSocket with data.
      */
     webSocketData () {
       try {
-        // this.socket = new WebSocket('wss://courselab.lnu.se/message-app/socket')
         this.fetchData = {
           type: 'message',
           data: 'The message text is sent using the data property',
@@ -367,7 +365,6 @@ customElements.define('chat-app',
           channel: 'my, not so secret, channel',
           key: 'eDBE76deU7L0H9mEBgxUKVR0VCnq0XBd'
         }
-        console.log(this.fetchData)
       } catch (error) {
         console.log('Oops, something went wrong')
       }
@@ -381,8 +378,6 @@ customElements.define('chat-app',
     checkNewMessage (event) {
       try {
         const data = JSON.parse(event.data)
-        console.log('checkNewMessage row 381')
-
         if (data.data) {
           this.recieveText = document.createElement('div')
           this.recieveText.style.width = '350px'
@@ -402,7 +397,6 @@ customElements.define('chat-app',
               this.pTime.classList.add('timerecievechat')
             }
             const today = new Date()
-            console.log('checkNewMessage 402')
             this.recieveText.append(data.username + ':' + data.data)
             this.pTime.textContent = today.getHours() + ':' + (today.getMinutes() < 10 ? '0' : '') + today.getMinutes()
             this.recieveText.append(this.pTime)
@@ -438,12 +432,10 @@ customElements.define('chat-app',
      */
     async getImages () {
       try {
-        console.log('getImages 433')
         const imagesContainer = []
         const url = 'https://api.giphy.com/v1/gifs/search?q=' + this.gifSearchField.value + '&rating=g&limit=4&api_key=yQC3qMgBqPWBQDkjDQo7KkJqvY1GiFoH'
         const fetchedUrl = await fetch(url)
         const response = await fetchedUrl.json()
-        console.log(response.data[0].images)
         const imagesArray = response.data
         this.gifWindow.innerHTML = ''
         for (let i = 0; i < imagesArray.length; i++) {
@@ -468,10 +460,7 @@ customElements.define('chat-app',
      */
     sendMessage (data) {
       try {
-        console.log('sendMessage 459')
-        // const dataMessage = data
         this.fetchData.data = data
-        console.log(this.fetchData.data)
         this.socket.send(JSON.stringify(this.fetchData))
         this.chatTextArea.value = ''
       } catch (error) {
@@ -480,11 +469,10 @@ customElements.define('chat-app',
     }
 
     /**
-     * Closes the socket connection.
+     * Closes a socket connection.
      *
      */
     disconnectedCallback () {
-      console.log('close')
       this.socket.close()
     }
   })

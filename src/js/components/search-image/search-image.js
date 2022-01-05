@@ -126,7 +126,6 @@ customElements.define('search-image',
           }
         })
         const response = await fetchedUrl.json()
-        console.log(response)
         const images = response.results
         const imagesArray = images.slice(0, 9)
         const imagesContainer = []

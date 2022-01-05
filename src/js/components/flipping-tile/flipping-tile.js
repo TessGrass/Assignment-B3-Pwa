@@ -93,31 +93,34 @@ customElements.define('flipping-tile',
       this.activeCard = false
 
       this.addEventListener('click', (event) => { // listens for clicked tile.
-        this.container.classList.toggle('flipCard') // container = whole card.
+        this.container.classList.toggle('flipCard')
         this.frontCard.classList.toggle('inactive')
         this.backCard.classList.toggle('inactive')
-        this.activeCard = !this.activeCard // växlar mellan sant / falskt
-        this.activeCard && this.dispatchEvent(new CustomEvent('activeTile', { // om kortet är true skickas activeTile till memorygame
+        this.activeCard = !this.activeCard // Flips between true / false
+        this.activeCard && this.dispatchEvent(new CustomEvent('activeTile', { // if the card is true -> activeTiles fires to memorygame component.
           detail: {
             alt: this.querySelector('img').getAttribute('alt') // name of the flipping card.
           }
         }))
       })
-      addEventListener('hidematchedcards', (event) => {
-        if (this.frontCard.classList.value !== 'inactive') { // Remove only the active cards
-          this.style.visibility = 'hidden'
-        }
-      })
+    }
 
-      addEventListener('flipunmatchedcards', (event) => {
-        if (this.frontCard.classList.value !== 'inactive') { // Remove only the active cards
-          this.container.classList.toggle('flipCard')
-          this.frontCard.classList.toggle('inactive')
-          this.backCard.classList.toggle('inactive')
-          this.activeCard = !this.activeCard
-        }
-      })
+    /**
+     * Hides the matched cards.
+     *
+     */
+    hideMatchedCard () {
+      this.style.visibility = 'hidden'
+    }
+
+    /**
+     * Flips unmatched cards.
+     *
+     */
+    flippedUnmatchedCard () {
+      this.container.classList.toggle('flipCard')
+      this.frontCard.classList.toggle('inactive')
+      this.backCard.classList.toggle('inactive')
+      this.activeCard = !this.activeCard
     }
   })
-
-// <div part="back" id="back"><slot name="back"></slot></div>
