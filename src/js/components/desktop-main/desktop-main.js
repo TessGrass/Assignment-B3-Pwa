@@ -214,72 +214,16 @@ customElements.define('desktop-main',
       this.memoryButton.addEventListener('click', (event) => {
         this.createApp(event.target.id)
         event.stopPropagation()
-        /* const desktopWindow = document.createElement('desktop-window')
-       this.memoryGame = document.createElement('memory-game')
-        desktopWindow.id = this.value++
-        console.log(desktopWindow.id)
-        desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
-        desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
-        desktopWindow.divContent.appendChild(this.memoryGame)
-        this.mainWindow.appendChild(desktopWindow)
-        desktopWindow.setZindexTo(this.getHighestZindex())
-
-        desktopWindow.addEventListener('closewindow', (event) => {
-          desktopWindow.remove()
-        })
-
-        desktopWindow.addEventListener('mousedown', (event) => {
-          Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // fetching all desktop-windows in the DOM.
-            window === event.target && window.setZindexTo(this.getHighestZindex() + 1)
-          })
-        }) */
       })
 
       this.searchImagesButton.addEventListener('click', (event) => {
         this.createApp(event.target.id)
         event.stopPropagation()
-        /* const desktopWindow = document.createElement('desktop-window')
-        this.searchImage = document.createElement('search-image')
-        desktopWindow.divContent.style.minHeight = '500px'
-        desktopWindow.id = this.value++
-        desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
-        desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
-        desktopWindow.divContent.appendChild(this.searchImage)
-        this.mainWindow.appendChild(desktopWindow)
-        desktopWindow.setZindexTo(this.getHighestZindex())
-
-        desktopWindow.addEventListener('closewindow', (event) => {
-          desktopWindow.remove()
-        })
-
-        desktopWindow.addEventListener('mousedown', (event) => {
-          Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // fetching all desktop-windows in the DOM.
-            window === event.target && window.setZindexTo(this.getHighestZindex() + 1)
-          })
-        }) */
       })
 
       this.chatButton.addEventListener('click', (event) => {
         this.createApp(event.target.id)
         event.stopPropagation()
-        /* const desktopWindow = document.createElement('desktop-window')
-        this.chatApp = document.createElement('chat-app')
-        desktopWindow.id = this.value++
-        desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
-        desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
-        desktopWindow.divContent.appendChild(this.chatApp)
-        this.mainWindow.appendChild(desktopWindow)
-        desktopWindow.setZindexTo(this.getHighestZindex())
-
-        desktopWindow.addEventListener('closewindow', (event) => {
-          desktopWindow.remove()
-        })
-
-        desktopWindow.addEventListener('mousedown', (event) => {
-          Array.from(this.shadowRoot.querySelectorAll('desktop-window')).forEach(window => { // fetching all desktop-windows in the DOM.
-            window === event.target && window.setZindexTo(this.getHighestZindex() + 1)
-          })
-        }) */
       })
 
       this.slider.addEventListener('click', (event) => { // toggle alternate desktop theme.
