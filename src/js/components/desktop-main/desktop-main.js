@@ -257,8 +257,8 @@ customElements.define('desktop-main',
       else if (name === 'search-images') this.searchImage = document.createElement('search-image')
       else if (name === 'chat') this.chatApp = document.createElement('chat-app')
       desktopWindow.id = this.value++
-      desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 10) + 'px' // adjusting window position
-      desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 15) + 'px' // adjusting window position
+      desktopWindow.shadowRoot.querySelector('#windowcontainer').style.left = 100 + (this.value * 15) + 'px' // adjusting window position
+      desktopWindow.shadowRoot.querySelector('#windowcontainer').style.top = 100 + (this.value * 30) + 'px' // adjusting window position
       if (name === 'memory') desktopWindow.divContent.appendChild(this.memoryGame)
       else if (name === 'search-images') desktopWindow.divContent.appendChild(this.searchImage)
       else if (name === 'chat') desktopWindow.divContent.appendChild(this.chatApp)
